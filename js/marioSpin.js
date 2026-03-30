@@ -29,7 +29,7 @@ const MarioSpin = (() => {
       img: RAW + 'Recordando-Super-Mario-Bros-NES-10.jpg' },
     { id: 'luigi',    emoji: '🟢', label: 'LUIGI',    value: 5,  pool: 3,
       radioTag: 'ambient',   radioEmoji: '🌊', radioLabel: 'Ambient',
-      img: RAW + '3a083df05201781d56433d893565e39edca3e161_large.jpg' },
+      img: 'img/Portrait.luigi.png' },
     { id: 'coin',     emoji: '🪙', label: 'COIN',     value: 3,  pool: 4,
       radioTag: 'news',      radioEmoji: '📰', radioLabel: 'News',
       img: RAW + '3d2e69f35ad37e1d79141b16ab2f341c.jpg' },
