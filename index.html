@@ -528,6 +528,23 @@
   </section>
 
   <!-- ════════════════════════════════════════════════════════
+       GAME SPINNER — 3-reel NES cartridge slot
+       Line up 3 covers → play that game instantly · 1 token
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="app-shell game-spinner-shell" id="gameSpinnerShell"
+           aria-labelledby="gameSpinnerTitle">
+    <div id="gameSpinnerMount"></div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       NES EMULATOR — launched by Game Spinner 3-of-a-kind
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="app-shell emu-shell" id="emuShell" hidden
+           aria-labelledby="emuTitle">
+    <div id="emuMount"></div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
        FOOTER
   ═══════════════════════════════════════════════════════════ -->
   <footer class="site-footer">
@@ -685,6 +702,7 @@
   <script src="js/marioSpin.js"></script>
   <script src="js/chiptuneEngine.js"></script>
   <script src="js/gameEmulator.js"></script>
+  <script src="js/gameSpinner.js"></script>
   <script src="js/rewardVault.js"></script>
   <script src="js/levelSystem.js"></script>
   <script src="js/researchLogger.js"></script>

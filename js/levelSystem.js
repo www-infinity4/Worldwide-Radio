@@ -191,6 +191,46 @@ const LevelSystem = (() => {
         }
         _showPowerToast('🟢 Watch & Earn!', 'Video token awarded!', '#00d4ff');
         break;
+
+      case 'question':
+        // Mystery block — random power from the full pool
+        const powers = ['star', 'mushroom', 'mario', 'luigi'];
+        const rolled = powers[Math.floor(Math.random() * powers.length)];
+        _showPowerToast('❓ Mystery Block!', `Rolled: ${rolled.toUpperCase()} power…`, '#ffd166');
+        setTimeout(() => activatePower(rolled, matchCount), 800);
+        break;
+
+      case 'topgun':
+        // Radar Sweep — bug scanner with military comms flair
+        _showPowerToast('🛩 Radar Sweep!', 'Scanning repos for open issues…', '#00aaff');
+        _runBugScan();
+        break;
+
+      case 'ducktales':
+        // Adventure Token — Watch & Earn (DuckTales = treasure hunting)
+        if (typeof RewardVault !== 'undefined') {
+          RewardVault.award(3, 'DUCKTALES TREASURE');
+        }
+        _showPowerToast('🦆 Treasure Found!', 'Watch & Earn — video token awarded!', '#ffd166');
+        if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('coin');
+        break;
+
+      case 'terminator':
+        // Dark Signal — trending boost into electronic/metal stations
+        s.trendingActive = true;
+        _save(s);
+        _showPowerToast('🤖 Dark Signal!', 'Trending boost — hard signal stations loading…', '#ef233c');
+        if (typeof window._onTrendingBoost === 'function') window._onTrendingBoost();
+        break;
+
+      case 'dragonwarrior':
+        // Epic Study — research doubler ×3 (longest run, 5 entries)
+        s.researchMult     = 3;
+        s.researchMultLeft = 5;
+        _save(s);
+        _showPowerToast('🐉 Epic Study!', 'Next 5 research entries earn ×3 XP', '#7b5cfa');
+        _updateMultiplierBadge(3, 5);
+        break;
     }
 
     awardXP('spin');

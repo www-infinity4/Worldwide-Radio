@@ -77,6 +77,16 @@
       RewardVault.render("vaultMount");
     }
 
+    // ── Game Spinner (3-reel NES cartridge slot) ──────────────────────────
+    if (typeof GameSpinner !== "undefined") {
+      GameSpinner.render("gameSpinnerMount");
+    }
+
+    // ── NES Emulator (launched by Game Spinner 3-of-a-kind) ──────────────
+    if (typeof GameEmulator !== "undefined") {
+      GameEmulator.render("emuMount");
+    }
+
     // ── BTC Ticker ────────────────────────────────────────────────────────
     if (typeof BtcHarvester !== "undefined") {
       _renderTicker();

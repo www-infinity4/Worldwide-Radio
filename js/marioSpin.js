@@ -13,6 +13,14 @@ const MarioSpin = (() => {
 
   const RAW = 'https://raw.githubusercontent.com/www-infinity4/Mario-spin/main/';
 
+  // GitHub-hosted question block & symbol assets (fetched by the browser at runtime)
+  const GH_ASSETS = {
+    blockWings: 'https://github.com/user-attachments/assets/52552d07-d706-400b-93ab-2640f7caf09c',
+    block3d:    'https://github.com/user-attachments/assets/3aca842a-9c9c-4a7d-ba4b-734e0ebaaa62',
+    blockFlat:  'https://github.com/user-attachments/assets/cd627b62-85d1-411e-987d-2fda8a90358a',
+    luigi:      'https://github.com/user-attachments/assets/7d7a87fa-da4a-4364-9557-a5965f71cb5f',
+  };
+
   // Symbol definitions — each maps to a radio genre tag
   const SYMBOLS = [
     { id: 'mushroom', emoji: '🍄', label: 'MUSHROOM', value: 6,  pool: 4,
@@ -29,10 +37,26 @@ const MarioSpin = (() => {
       img: RAW + 'Recordando-Super-Mario-Bros-NES-10.jpg' },
     { id: 'luigi',    emoji: '🟢', label: 'LUIGI',    value: 5,  pool: 3,
       radioTag: 'ambient',   radioEmoji: '🌊', radioLabel: 'Ambient',
-      img: 'img/Portrait.luigi.png' },
+      img: GH_ASSETS.luigi },
     { id: 'coin',     emoji: '🪙', label: 'COIN',     value: 3,  pool: 4,
       radioTag: 'news',      radioEmoji: '📰', radioLabel: 'News',
-      img: RAW + '3d2e69f35ad37e1d79141b16ab2f341c.jpg' },
+      img: GH_ASSETS.block3d },
+    { id: 'question', emoji: '❓', label: 'BLOCK',    value: 4,  pool: 3,
+      radioTag: 'electronic', radioEmoji: '⚡', radioLabel: 'Electronic',
+      img: GH_ASSETS.blockFlat },
+    // ── NES Cartridge Covers ─────────────────────────────────────────────────
+    { id: 'topgun',       emoji: '🛩',  label: 'TOP GUN',       value: 4,  pool: 3,
+      radioTag: 'military',  radioEmoji: '📡', radioLabel: 'Military / Radar',
+      img: 'https://github.com/user-attachments/assets/4641a66d-9881-487b-89d6-3c5ae8c63ba2' },
+    { id: 'ducktales',    emoji: '🦆',  label: 'DUCKTALES',     value: 5,  pool: 3,
+      radioTag: 'folk',      radioEmoji: '🪕', radioLabel: 'Folk',
+      img: 'https://github.com/user-attachments/assets/dda800be-0001-43a5-a841-a6db89c7c7f8' },
+    { id: 'terminator',   emoji: '🤖',  label: 'TERMINATOR',    value: 7,  pool: 2,
+      radioTag: 'metal',     radioEmoji: '🔩', radioLabel: 'Metal',
+      img: 'https://github.com/user-attachments/assets/a616af94-e8f5-4f9f-a29f-2e219074d3c5' },
+    { id: 'dragonwarrior',emoji: '🐉',  label: 'DRAGON WARRIOR',value: 9,  pool: 2,
+      radioTag: 'world',     radioEmoji: '🌍', radioLabel: 'World',
+      img: 'https://github.com/user-attachments/assets/51b10bb8-b5b2-4607-b2ff-5f2c638153d8' },
   ];
 
   // Weighted pool
@@ -120,7 +144,10 @@ const MarioSpin = (() => {
         <!-- Controls -->
         <div class="ms-controls">
           <button class="ms-spin-btn" id="msSpinBtn" aria-label="Spin the slot machine">
-            <span class="ms-btn-icon" aria-hidden="true">🍄</span>
+            <img class="ms-btn-block" src="https://github.com/user-attachments/assets/52552d07-d706-400b-93ab-2640f7caf09c"
+                 alt="" aria-hidden="true" width="36" height="36"
+                 onerror="this.style.display='none';this.nextElementSibling.hidden=false">
+            <span class="ms-btn-icon" aria-hidden="true" hidden>🍄</span>
             <span>SPIN &amp; GO!</span>
           </button>
         </div>
