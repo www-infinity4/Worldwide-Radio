@@ -241,6 +241,30 @@ const MarioSpin = (() => {
       BtcHarvester.emit(`Mario Spin — ${topSym.emoji} ×${maxCount} (+${coins} coins)`);
     }
 
+    // Level System — award XP and activate symbol power
+    if (typeof LevelSystem !== 'undefined') {
+      if (maxCount >= 5) {
+        LevelSystem.awardXP('jackpot');
+      } else if (maxCount === 4) {
+        LevelSystem.awardXP('fourOak');
+      } else if (maxCount === 3) {
+        LevelSystem.awardXP('threeOak');
+      } else if (maxCount === 2) {
+        LevelSystem.awardXP('pair');
+      } else {
+        LevelSystem.awardXP('spin');
+      }
+      // Activate the winning symbol's unique power
+      if (coins > 0) LevelSystem.activatePower(topSym.id, maxCount);
+    }
+
+    // Synapse memory — record the spin
+    if (typeof Synapse !== 'undefined' && coins > 0) {
+      Synapse.remember('user',
+        `Mario Spin: ${topSym.emoji} ×${maxCount} → ${topSym.radioLabel} · +${coins} coins`,
+        'signal');
+    }
+
     const btn = document.getElementById('msSpinBtn');
     if (btn) {
       btn.disabled = false;

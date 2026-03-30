@@ -61,6 +61,48 @@ const RewardVault = (() => {
       type: 'archive',
       note: 'Public domain — US Government film',
     },
+    // ── Zelda & Mario World Vault ──────────────────────────────────────────
+    // Archive.org public domain / fan-restored episodes
+    {
+      label: '🗡️  Zelda — Slime Busters (Ep 5 RESTORED)',
+      author: 'Super Mario Bros Super Show — Fan restore',
+      embed: 'https://archive.org/embed/youtube-oxfgPWpaLJI',
+      type: 'archive',
+      clip: { start: 0, end: 180 },
+      note: 'LOZ01 · First Zelda episode · 0–3 min clip',
+    },
+    {
+      label: '🗡️  Zelda — Series Ep 1',
+      author: 'Legend of Zelda 1989 Complete Series',
+      embed: 'https://archive.org/embed/legend-of-zelda-1989-complete-series',
+      type: 'archive',
+      clip: { start: 0, end: 180 },
+      note: 'Ep 1 · 0–3 min opening clip',
+    },
+    {
+      label: '🗡️  Zelda — Series Ep 2',
+      author: 'Legend of Zelda 1989 Complete Series',
+      embed: 'https://archive.org/embed/legend-of-zelda-1989-complete-series/Zelda_E02.mp4',
+      type: 'archive',
+      clip: { start: 60, end: 240 },
+      note: 'Ep 2 · 1–4 min action clip',
+    },
+    {
+      label: '🗡️  Zelda — Series Ep 3',
+      author: 'Legend of Zelda 1989 Complete Series',
+      embed: 'https://archive.org/embed/legend-of-zelda-1989-complete-series/Zelda_E03.mp4',
+      type: 'archive',
+      clip: { start: 30, end: 210 },
+      note: 'Ep 3 · 30s–3:30 min signal clip',
+    },
+    {
+      label: '🍄 Mario — Title Theme Demo',
+      author: 'Public Domain Chiptune Demo',
+      embed: 'https://archive.org/embed/youtube-oxfgPWpaLJI',
+      type: 'archive',
+      clip: { start: 180, end: 360 },
+      note: 'Mario theme reference · 3–6 min clip',
+    },
     {
       label: '🎮 Add Your Own Video',
       author: 'YouTube · Archive.org · MP4 URL',

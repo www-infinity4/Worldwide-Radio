@@ -62,6 +62,11 @@
       Visualiser.init(audioEl, visualiserCanvas);
     }
 
+    // ── Level System (OS layers — runs silently underneath everything) ─────
+    if (typeof LevelSystem !== "undefined") {
+      LevelSystem.init();
+    }
+
     // ── Mario Spin ─────────────────────────────────────────────────────────
     if (typeof MarioSpin !== "undefined") {
       MarioSpin.render("marioSpinMount");
@@ -94,6 +99,26 @@
       });
     }
 
+    // ── Trending Boost hook (⭐ Star power from LevelSystem) ──────────────
+    window._onTrendingBoost = async function () {
+      queryInput.value    = "";
+      tagSelect.value     = "";
+      countrySelect.value = "";
+      showLoading(true);
+      clearError();
+      stopAll();
+      try {
+        stations = await RadioBrowser.getTopStations(200);
+        renderStationList();
+        showToast("⭐ Trending Boost — top stations loaded!");
+        if (typeof LevelSystem !== "undefined") LevelSystem.awardXP("tune");
+      } catch (_) {
+        showError("Could not load trending stations.");
+      } finally {
+        showLoading(false);
+      }
+    };
+
     // ── Mario Spin → Radio channel hook ──────────────────────────────────
     window._onMarioSlotWin = async function (symbol, matchCount) {
       if (!symbol.radioTag) return;
@@ -109,6 +134,7 @@
         renderStationList();
         showToast(`${symbol.emoji} ${symbol.label} → ${symbol.radioEmoji} ${symbol.radioLabel}`);
         if (stations.length === 0) showError(`No stations found for "${symbol.radioLabel}".`);
+        if (typeof LevelSystem !== "undefined") LevelSystem.awardXP("tune");
       } catch (_) {
         showError("Could not load stations for this channel.");
       } finally {
@@ -487,6 +513,9 @@
       // Persist to user profile
       UserProfile.logCrush(result);
       showToast(`${channel.emoji} ${channel.label} — Block #${height.toLocaleString()}`);
+
+      // Level System — award XP for a crush
+      if (typeof LevelSystem !== "undefined") LevelSystem.awardXP("crush");
 
       // Signal Coin — generate nuclear fingerprint from this hash
       _renderSignalCoin(result);

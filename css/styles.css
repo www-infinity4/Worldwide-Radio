@@ -2534,3 +2534,159 @@ button.active {
   .vault-iframe      { height: 220px; }
   .emu-canvas        { width: 100%; }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   SYSTEM LAYER BAR — quiet OS status strip
+══════════════════════════════════════════════════════════════════ */
+
+.sys-layer-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.28rem 1rem;
+  background: rgba(0,0,0,0.35);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.sys-layer-xp-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.sys-layer-label {
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+  transition: color 0.4s;
+}
+
+.sys-layer-track {
+  flex: 1;
+  height: 2px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  min-width: 60px;
+}
+
+.sys-layer-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease, background 0.4s;
+  background: var(--gold);
+}
+
+.sys-layer-xp {
+  white-space: nowrap;
+  opacity: 0.55;
+  font-size: 0.63rem;
+}
+
+.sys-layer-mult {
+  font-size: 0.68rem;
+  color: #06d6a0;
+  font-weight: 600;
+}
+
+.sys-layer-bug {
+  font-size: 0.66rem;
+  color: #ef233c;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   WARPS — session clone snapshots
+══════════════════════════════════════════════════════════════════ */
+
+.warp-shell {
+  margin-top: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  border-color: rgba(255,255,255,0.06);
+}
+
+.warp-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.65rem;
+}
+
+.warp-title {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.warp-sub {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.warp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.warp-item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  padding: 0.25rem 0.5rem;
+  background: rgba(255,255,255,0.025);
+  border-radius: 3px;
+  border-left: 2px solid rgba(255,255,255,0.08);
+}
+
+.warp-icon { opacity: 0.5; }
+
+.warp-info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.warp-time {
+  opacity: 0.45;
+  white-space: nowrap;
+  font-size: 0.62rem;
+}
+
+.warp-empty {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  opacity: 0.5;
+  font-family: var(--font-mono);
+  padding: 0.3rem 0.5rem;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   POWER TOASTS — symbol activation notifications
+══════════════════════════════════════════════════════════════════ */
+
+.toast-power {
+  border-left: 3px solid var(--gold);
+  padding-left: 0.9rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.toast-power span {
+  opacity: 0.75;
+  font-size: 0.72rem;
+}
