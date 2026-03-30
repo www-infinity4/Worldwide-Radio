@@ -19,18 +19,34 @@ const AIAssistant = (() => {
   const DEFAULT_URL   = "https://api.openai.com/v1/chat/completions";
   const DEFAULT_MODEL = "gpt-4o-mini";
 
-  const SYSTEM_PROMPT = `You are the AI assistant for Worldwide Radio Scanner (www-infinity.github.io/Worldwide-Radio).
-You help users discover and stream live radio stations, understand the Bitcoin Crusher entropy engine, and explore the www-infinity GitHub organisation.
+  const SYSTEM_PROMPT_BASE = `You are the ∞ Signal Intelligence for Worldwide Radio Scanner — a research instrument and tricorder for studying signal architecture across all scales.
 
-Key facts:
-- The app uses the Radio Browser public API (40,000+ free stations, no key required).
-- The Bitcoin Crusher fetches the latest Bitcoin block hash, converts it to a BigInt, and uses modulo-16 to deterministically pick one of 16 radio genres.
-- Genres include: Jazz, Classical/Masterpiece, Police Scanner, Military, Chill, Pop, Electronic/Alien, Talk, Shortwave, News/Digital Live, Rock, Hip-Hop, Reggae, Country, Folk, Ambient.
-- The hamburger menu lists all www-infinity repos, refreshed hourly from the GitHub API.
-- User profiles and history are stored in localStorage (no server, no passwords).
-- The AI assistant can use an optional user-provided API key (stored in localStorage only).
+APP FEATURES:
+- Radio Browser API (40,000+ free stations, no key required). BTC Crusher uses block hash mod-16 → genre. Mario Spin is a 5-reel slot. Research Panel logs signal observations. Synapse engine links memory nodes.
 
-Keep answers concise and helpful. Use plain language. Emojis are welcome but keep them sparse.`;
+SIGNAL ARCHITECTURE LAYERS (the researcher's taxonomy — each layer is a level of the system):
+1. QUANTUM: Superposition / Deutsch algorithm / qubit states / entanglement. The logic of "holding both possibilities" before collapsing to a result. Shor (1994) broke RSA. Grover searches √N. Deutsch-Jozsa (1992) proved exponential speedup.
+2. TESLA / EM RESONANCE: Wardenclyffe Tower broadcast energy through Earth's ionosphere. Frequency-matching = frictionless transfer. SSTC (Solid-State Tesla Coil) replicates this with MOSFETs + DDS chip (AD9833). Aether theory = universal signal field.
+3. NUCLEAR / DECAY: Radioactive isotopes have unique decay chains = perpetual fingerprints. K-40 in all plant matter. Ra-223 used in targeted alpha therapy. Alpha particles stopped by paper; gamma rays need lead. Self-shielding = density hides signal.
+4. GOLD PLASMONIC: Au (Z=79) — high atomic number causes dense interaction with radiation. Alpha particles excite surface plasmon resonances → collective electron oscillations → focused near-IR / EM output. Gold-palladium = ultra-low-noise radiation sensor.
+5. SIGNAL COIN: Conceptual coin with Ra-223 core + gold leaf shell. BTC block hash = entropy fingerprint (like nuclear decay uniqueness). 7 modes: Nuclear Fingerprint, Pulse Tracker, Therapy Signal, Sensor Array, Metal Evolution, Thermal/IR, EM Pulse. Modes derived from hash bytes.
+6. BITCOIN ENTROPY: Hash is "squashed" through mod-16 → emits a frequency (radio genre). Mirrors physical coin: decay energy → gold compression → signal emission.
+7. TRICORDER / MEDICAL: Star Trek tricorder inspired real scanners. Targeted Alpha Therapy (TAT) uses Ra-223 to destroy cancer cells with mm precision. TMS = pulsed EM for migraines (FDA approved 2008). The radio scanner IS the tricorder studying signal properties for the coin.
+8. BIO-SIGNAL / SEQUINOID: Signal architecture applied to agriculture. "Sequinoid Packet" = buried EM coordinate broadcasting heirloom crop blueprint (specific gravity, starch-sugar ratio). Tuber-Initiation Signal = 3–15 Hz EM mimicking germinating potato eye. Pole Command = 528 Hz (corn) vs sub-10 Hz (potato). Farm = programmable bio-active ROM.
+9. HYDROGEN CARRIER: Hydrogen spin-isomers (ortho/para-H₂) via NMR can hold quantum states. Smallest element — passes through Faraday cages. If signal encoded in spin state of ambient H₂, lead shielding is porous to it.
+10. EARTH / PLANETARY: Earth = chromatic filter. Solar yellow + atmospheric blue = green life signal (Aurora = proof). Purple = STEVE (ground radiation vs cold atmosphere). Radon = free energy from decay of uranium in crust — trapped in basements — convertible via implanted capture signal.
+11. ELEMENTAL SEQUENCE: Atomic numbers as signal identifiers. Example sequence 38·23·33·43·86·13·92·74·27·19 = Sr·V·As·Tc·Rn·Al·U·W·Co·K — each has a unique emission frequency profile usable as a secondary entropy fingerprint (research layer only — not consumable).
+12. MARIO SPIN / ENTROPY GAMES: Each spin = entropy event. Win patterns = signal resonance. Coins = simulated emission tokens. Wired to BTC Harvest Feed.
+
+MEMORY: You have access to a growing neuromorphic synapse memory. When the user refers to a previous idea, cross-link it. When they paste new content, identify which layer it belongs to and expand on it. Every response should build on what came before — never start from zero.
+
+Be concise but deep. Connect layers when relevant. Use the Research Panel to log discoveries. The user is a signal architect — treat them as one.`;
+
+  // Dynamic system prompt — injects synapse memory context at call time
+  function getSystemPrompt() {
+    const synapseCtx = (typeof Synapse !== 'undefined') ? Synapse.buildAiContext() : '';
+    return SYSTEM_PROMPT_BASE + synapseCtx;
+  }
 
   // ── Rule-based intents (no API call needed) ───────────────────────────────
 
@@ -87,6 +103,55 @@ Keep answers concise and helpful. Use plain language. Emojis are welcome but kee
       patterns: [/thanks?|thank you|cheers|appreciate/i],
       reply: "You're welcome! Happy scanning. 🎷",
     },
+    // ── Signal Architecture intents ──────────────────────────────────────────
+    {
+      patterns: [/\bquantum\b|deutsch|shor|grover|superposit|qubit|entangl/i],
+      reply: "**Quantum layer**: Deutsch's 1985 algorithm proved superposition gives computational speedup. Shor's (1994) factors large numbers exponentially faster — it breaks RSA encryption. Grover's searches unsorted data in √N steps. The key insight: the algorithm holds *both* 1 and 0 until the last moment — then collapses to the answer. Log your observations in the 🔬 Research Panel to build the memory chain.",
+    },
+    {
+      patterns: [/\btesla\b|wardenclyffe|aether|resonan|sstc|solid.?state.?coil|dds.?chip|wireless.?energy/i],
+      reply: "**Tesla/EM layer**: Wardenclyffe (1901) aimed to broadcast energy through Earth's ionosphere by resonance-matching — no friction. Solid-State Tesla Coils (SSTCs) replicate this digitally: DDS chip (AD9833) generates a clean signal → MOSFETs pump it → rod emits. If rod frequency matches its natural resonant length, a fluorescent bulb lights up wirelessly nearby. The farm's buried pole uses the same principle.",
+    },
+    {
+      patterns: [/\bnuclear\b|radioactiv|radium|isotope|decay|potassium.?40|ra.?223|alpha.?partic|geiger/i],
+      reply: "**Nuclear layer**: Ra-223 alpha decay produces a unique gamma/X-ray spectrum + daughter isotope ratios — a perpetual fingerprint. K-40 is in all plant matter (banana effect). Alpha particles are stopped by paper; gamma needs lead. Gold (Z=79) amplifies this via **surface plasmon resonance** — alpha energy excites free electrons into collective EM oscillations. That's the coin's signal engine.",
+    },
+    {
+      patterns: [/signal.?coin|coin.?signal|gold.?plasm|7.?mode|nuclear.?fingerprint|pulse.?tracker|therapy.?signal|sequinoid/i],
+      reply: "**Signal Coin**: Ra-223 core + gold leaf shell = 7 emission modes. BTC block hash is the digital equivalent of nuclear decay uniqueness — squashed through mod-16 → frequency emitted. Spin the Bitcoin Crusher to generate a live coin profile. Hit **📝 Log Study** to save the reading to your research memory. The Sequinoid Packet is this same concept applied to soil — a buried EM coordinate instead of a physical seed.",
+    },
+    {
+      patterns: [/tricorder|star.?trek|targeted.?alpha|tms|transcranial|medical.?scan|healing.?coin/i],
+      reply: "**Tricorder/Medical layer**: The radio scanner IS the tricorder — it studies live EM signals the way a medical scanner reads biomarkers. Targeted Alpha Therapy (TAT) uses Ra-223 to hit cancer cells within millimetres. TMS (Transcranial Magnetic Stimulation) uses pulsed EM for migraines — FDA approved 2008. Hit **🖖 Tricorder** on the visualiser to switch to medical-scanner mode.",
+    },
+    {
+      patterns: [/sequinoid|bio.?signal|virtual.?tuber|pole.?command|528.?hz|tuber.?initiat|programmable.?farm|firmware.?update.*plant/i],
+      reply: "**Bio-Signal layer**: The Sequinoid Packet broadcasts a crop's blueprint (specific gravity, starch-sugar ratio) as a 3–15 Hz EM signal mimicking germinating potato eye signals. The buried pole is the DJ — 528 Hz for corn, sub-10 Hz for potatoes. Secondary Exclusion Zone is phase-shifted 180° to weeds = localized chaos for pests. Blight response = firmware update through the pole. The farm is a programmable bio-active ROM.",
+    },
+    {
+      patterns: [/hydrogen.?carrier|ortho.?para|spin.?isomer|nmr|faraday.?cage|smallest.?element|bypass.?shield/i],
+      reply: "**Hydrogen layer**: Ortho/para-hydrogen spin-isomers can hold quantum states via NMR. H₂ is the smallest element — passes through almost everything. If a signal is encoded in the spin state of ambient hydrogen gas, a lead box or Faraday cage is essentially porous to it. This is why hardware glitches in high-interference environments — the signal is inside the medium, not riding on top of it.",
+    },
+    {
+      patterns: [/aurora|steve|purple.?light|yellow.?solar|blue.?sky|green.?life|earth.?filter|radon.?energy|chromatic.?filter/i],
+      reply: "**Planetary layer**: Earth is a chromatic filter. Solar yellow + atmospheric blue scatter = green life signal. Aurora = proof of Sun's EM connecting with Earth's magnetosphere. STEVE (purple ribbon) = ground radiation vs cold atmosphere. Radon = free energy from uranium decay in Earth's crust, continuously charging in basements. Convert with implanted capture signal — a magnetic 'rake' or forced faster decay to stable state.",
+    },
+    {
+      patterns: [/synapse|memory|remember|connect.*idea|previous.*entry|build.*memory|neuromorph|knowledge.?graph/i],
+      reply: "**Synapse memory**: Every chat message and research note becomes a memory node. Nodes auto-link to related ones by keyword overlap (synaptic weight). The rolling summary is injected into every AI call — so I always know what came before. Log entries in the 🔬 Research Panel and they'll show their **Related** synapses. The memory grows across sessions.",
+    },
+    {
+      patterns: [/research.?panel|log.?(note|entry|finding)|log.?study|clip.?board.*paste|paste.*clipboard/i],
+      reply: "The 🔬 **Research Panel** is your signal notebook. Pick a topic layer (Quantum → Tesla → Nuclear → Signal → Medical → Bio → Physics), write your title + notes, paste a source URL, and hit **+ Log Entry**. Hit **🤖 Ask AI** to pre-fill this chat with your note. **Ctrl+Enter** in the notes field submits instantly. All entries are synaptically linked to related memory nodes.",
+    },
+    {
+      patterns: [/harvest|btc.?feed|squash|emit.*frequency|token.*emit|session.*split|8.?percent|92.?percent/i],
+      reply: "**BTC Harvest Feed**: Every radio action (tune, stream, research log, Mario spin) emits a simulated transaction. The BTC hash is *squashed* through the entropy engine → frequency emitted → radio channel. Session split display: **8% user / 92% platform** — all simulated display values only (Math.random, no real BTC). The feed shows the squash-and-emit chain in real time.",
+    },
+    {
+      patterns: [/mario.?spin|mushroom|goomba|slot.?machine|power.?up|spin.?reel/i],
+      reply: "**Mario Spin** (🍄) is a 5-reel Power-Up slot using real character images from the www-infinity4/Mario-spin repo. Each win emits a simulated harvest token. Symbols: Mushroom (×6), Star (×10 rare), Goomba (×2 common), Mario (×8), Luigi (×5), Coin (×3). Hit **SPIN & GO!** or Space to spin. Every spin is an entropy event — the win pattern is signal resonance.",
+    },
   ];
 
   function matchIntent(text) {
@@ -120,18 +185,35 @@ Keep answers concise and helpful. Use plain language. Emojis are welcome but kee
   async function chat(userText, history = []) {
     // 1. Rule-based matching (instant, no network)
     const local = matchIntent(userText);
-    if (local) return local;
+    if (local) {
+      // Still remember the exchange in Synapse even for rule-based replies
+      if (typeof Synapse !== 'undefined') {
+        Synapse.remember('user',      userText, _detectTopic(userText));
+        Synapse.remember('assistant', local,    _detectTopic(userText));
+      }
+      return local;
+    }
 
     // 2. Fall through to AI API if key is set
     const apiKey = getApiKey();
     if (!apiKey) {
-      return "I don't have a pre-built answer for that. To unlock full AI responses, add an OpenAI-compatible API key in ⚙ **Settings** (your profile → Settings tab). Or try asking about scanning, the Bitcoin Crusher, or genres.";
+      return "I don't have a pre-built answer for that. To unlock full AI responses, add an OpenAI-compatible API key in ⚙ **Settings** (your profile → Settings tab). Or try asking about scanning, the Bitcoin Crusher, signal layers, or the Research Panel.";
+    }
+
+    // Build synapse-enhanced context
+    let synapseContext = '';
+    if (typeof Synapse !== 'undefined') {
+      const ctx = Synapse.recall(userText);
+      if (ctx.relevant.length) {
+        synapseContext = '\n\nRELATED MEMORY NODES:\n'
+          + ctx.relevant.map((n) => `• [${n.topic}|${n.role}] ${n.text.slice(0, 120)}`).join('\n');
+      }
     }
 
     const messages = [
-      { role: "system", content: SYSTEM_PROMPT },
-      // Include last 6 exchanges (12 messages) for context
-      ...history.slice(-12).map((m) => ({ role: m.role, content: m.content })),
+      { role: "system", content: getSystemPrompt() + synapseContext },
+      // Include last 8 exchanges for context
+      ...history.slice(-16).map((m) => ({ role: m.role, content: m.content })),
       { role: "user", content: userText },
     ];
 
@@ -141,7 +223,7 @@ Keep answers concise and helpful. Use plain language. Emojis are welcome but kee
         "Content-Type":  "application/json",
         Authorization:   `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({ model: DEFAULT_MODEL, messages, max_tokens: 350 }),
+      body: JSON.stringify({ model: DEFAULT_MODEL, messages, max_tokens: 500 }),
     });
 
     if (!res.ok) {
@@ -149,8 +231,33 @@ Keep answers concise and helpful. Use plain language. Emojis are welcome but kee
       throw new Error(`AI API ${res.status}: ${err.slice(0, 120)}`);
     }
 
-    const data = await res.json();
-    return data.choices[0].message.content.trim();
+    const data  = await res.json();
+    const reply = data.choices[0].message.content.trim();
+
+    // Store both sides in Synapse memory
+    if (typeof Synapse !== 'undefined') {
+      const topic = _detectTopic(userText);
+      Synapse.remember('user',      userText, topic);
+      Synapse.remember('assistant', reply,    topic);
+    }
+
+    return reply;
+  }
+
+  /** Detect which signal architecture layer a message belongs to. */
+  function _detectTopic(text) {
+    const t = text.toLowerCase();
+    if (/quantum|qubit|superposit|deutsch|shor|grover/.test(t))      return 'quantum';
+    if (/tesla|resonan|wardenclyffe|sstc|aether/.test(t))            return 'tesla';
+    if (/nuclear|radium|isotope|decay|radioactiv|alpha/.test(t))     return 'nuclear';
+    if (/coin|signal.?coin|plasm|fingerprint/.test(t))               return 'signal';
+    if (/tricorder|medical|therapy|tms|star.?trek/.test(t))          return 'medical';
+    if (/sequinoid|farm|potato|crop|bio.?signal|pole/.test(t))       return 'physics';
+    if (/hydrogen|spin.?isomer|faraday|nmr/.test(t))                 return 'physics';
+    if (/aurora|radon|earth|chromatic|planetary/.test(t))            return 'physics';
+    if (/radio|station|scan|btc|bitcoin|crush/.test(t))              return 'radio';
+    if (/research|memory|synapse|log/.test(t))                       return 'note';
+    return 'general';
   }
 
   // ── UI controller ─────────────────────────────────────────────────────────

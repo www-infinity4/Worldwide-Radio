@@ -62,6 +62,60 @@
       Visualiser.init(audioEl, visualiserCanvas);
     }
 
+    // ── Mario Spin ─────────────────────────────────────────────────────────
+    if (typeof MarioSpin !== "undefined") {
+      MarioSpin.render("marioSpinMount");
+    }
+
+    // ── Token Vault (Music · Video · Games) ───────────────────────────────
+    if (typeof RewardVault !== "undefined") {
+      RewardVault.render("vaultMount");
+    }
+
+    // ── BTC Ticker ────────────────────────────────────────────────────────
+    if (typeof BtcHarvester !== "undefined") {
+      _renderTicker();
+    }
+
+    // ── Research Panel ────────────────────────────────────────────────────
+    if (typeof ResearchPanel !== "undefined") {
+      ResearchPanel.init();
+    }
+
+    // ── Tricorder button ──────────────────────────────────────────────────
+    const tricorderBtn = document.getElementById("tricorderBtn");
+    if (tricorderBtn) {
+      tricorderBtn.addEventListener("click", () => {
+        const on = tricorderBtn.getAttribute("aria-pressed") !== "true";
+        tricorderBtn.setAttribute("aria-pressed", String(on));
+        tricorderBtn.classList.toggle("active", on);
+        if (typeof Visualiser !== "undefined") Visualiser.setTricorderMode(on);
+        if (typeof ChiptuneEngine !== "undefined" && on) ChiptuneEngine.play("coin");
+      });
+    }
+
+    // ── Mario Spin → Radio channel hook ──────────────────────────────────
+    window._onMarioSlotWin = async function (symbol, matchCount) {
+      if (!symbol.radioTag) return;
+      const tag = symbol.radioTag;
+      tagSelect.value = tag;
+      queryInput.value = "";
+      countrySelect.value = "";
+      showLoading(true);
+      clearError();
+      stopAll();
+      try {
+        stations = await RadioBrowser.getStationsByTag(tag, 200);
+        renderStationList();
+        showToast(`${symbol.emoji} ${symbol.label} → ${symbol.radioEmoji} ${symbol.radioLabel}`);
+        if (stations.length === 0) showError(`No stations found for "${symbol.radioLabel}".`);
+      } catch (_) {
+        showError("Could not load stations for this channel.");
+      } finally {
+        showLoading(false);
+      }
+    };
+
     await loadCountries();
     await loadTopStations();
     setupEventListeners();

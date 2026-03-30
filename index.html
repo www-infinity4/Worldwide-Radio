@@ -402,7 +402,107 @@
       <ul class="station-list" id="stationList" aria-label="Station list"></ul>
     </div>
 
+    <!-- ── BTC Harvest Feed ─────────────────────────────────── -->
+    <section class="harvest-card glass-card" id="harvestCard" aria-labelledby="harvestTitle">
+      <div class="harvest-header">
+        <div>
+          <h3 class="harvest-title" id="harvestTitle">
+            <span class="harvest-icon" aria-hidden="true">⛓</span>
+            Harvest Feed
+            <span class="harvest-sim-badge">SIM</span>
+          </h3>
+          <p class="harvest-sub">Hash squashed → frequency emitted → token logged</p>
+        </div>
+        <div class="harvest-totals" id="harvestTotals">
+          <div class="harvest-total-item">
+            <span class="harvest-total-label">Session</span>
+            <code class="harvest-total-val" id="harvestTotal">0.00000000 ₿</code>
+          </div>
+          <div class="harvest-total-item">
+            <span class="harvest-total-label">Your 8%</span>
+            <code class="harvest-total-val harvest-user" id="harvestUser">0.00000000 ₿</code>
+          </div>
+        </div>
+      </div>
+      <ul class="harvest-tx-list" id="harvestTxList" aria-label="Transaction feed"></ul>
+      <p class="harvest-disclaimer">
+        ⚠ Simulation only — all values are Math.random() display figures. No real Bitcoin is transferred.
+      </p>
+    </section>
+
   </div><!-- /.app-shell -->
+
+  <!-- ════════════════════════════════════════════════════════
+       RESEARCH PANEL — Signal notebook
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="app-shell research-shell" aria-labelledby="researchPanelTitle">
+    <div class="research-card glass-card" id="researchCard">
+
+      <div class="research-header">
+        <div>
+          <h2 class="research-title" id="researchPanelTitle">
+            <span class="research-icon" aria-hidden="true">🔬</span>
+            Research Panel
+          </h2>
+          <p class="research-sub">Signal notebook · Log discoveries · Connect ideas</p>
+        </div>
+        <div class="research-header-actions">
+          <span class="synapse-stats" id="synapseStats" title="Memory nodes and synaptic links"></span>
+          <button class="btn-secondary" id="researchExportBtn" title="Export research log">⬇ Export</button>
+          <button class="btn-secondary" id="researchCollapseBtn" aria-expanded="true" title="Collapse panel">▲</button>
+        </div>
+      </div>
+
+      <div id="researchBody">
+
+        <!-- Topic filter pills -->
+        <div class="research-topics" id="researchTopics" role="tablist" aria-label="Topic filter"></div>
+
+        <!-- Entry form -->
+        <div class="research-form">
+          <div class="research-form-row">
+            <select class="research-topic-select" id="researchTopicSelect" aria-label="Topic"></select>
+            <input type="text" class="research-title-input" id="researchTitleInput"
+                   placeholder="Research title or question…" maxlength="120" aria-label="Title" />
+          </div>
+          <textarea class="research-notes-input" id="researchNotesInput" rows="3"
+                    placeholder="Notes, observations, signal readings, clipboard insights… (Ctrl+Enter to save)"
+                    maxlength="2000" aria-label="Notes"></textarea>
+          <div class="research-form-footer">
+            <input type="url" class="research-source-input" id="researchSourceInput"
+                   placeholder="Source URL (optional)" aria-label="Source URL" />
+            <div class="research-form-actions">
+              <button class="btn-secondary" id="researchAskAiBtn">🤖 Ask AI</button>
+              <button class="btn-primary"   id="researchLogBtn">+ Log Entry</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- List header -->
+        <div class="research-list-header">
+          <span class="research-count" id="researchCount" aria-live="polite">0 entries</span>
+          <button class="btn-danger" id="researchClearBtn"
+                  style="font-size:0.72rem;padding:0.2rem 0.55rem">🗑 Clear</button>
+        </div>
+
+        <!-- Entries -->
+        <div class="research-list-wrap">
+          <ul class="research-list" id="researchList" aria-label="Research entries"></ul>
+          <p class="research-empty" id="researchEmpty">
+            No entries yet. Log your first signal observation above.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       TOKEN VAULT — Music · Video · Games
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="app-shell vault-shell" id="vaultShell" hidden aria-labelledby="vaultTitle">
+    <div id="vaultMount"></div>
+  </section>
 
   <!-- ════════════════════════════════════════════════════════
        FOOTER
@@ -548,14 +648,23 @@
   <!-- Toast notification container -->
   <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="false"></div>
 
-  <!-- Scripts: profile → AI → dynamic nav → Bitcoin Crusher → radio browser → visualiser → research writer → app → hero -->
+  <!-- Scripts: profile → synapse → AI → dynamic nav → Bitcoin Crusher → radio browser → visualiser → research writer → signal coin → btc harvester → mario spin → chiptune → game emulator → reward vault → research logger → research panel → app → hero -->
   <script src="js/userProfile.js"></script>
+  <script src="js/synapse.js"></script>
   <script src="js/aiAssistant.js"></script>
   <script src="js/dynamicNav.js"></script>
   <script src="js/bitcoinCrusher.js"></script>
   <script src="js/radioBrowser.js"></script>
   <script src="js/visualiser.js"></script>
   <script src="js/bitcoinResearchWriter.js"></script>
+  <script src="js/signalCoin.js"></script>
+  <script src="js/btcHarvester.js"></script>
+  <script src="js/marioSpin.js"></script>
+  <script src="js/chiptuneEngine.js"></script>
+  <script src="js/gameEmulator.js"></script>
+  <script src="js/rewardVault.js"></script>
+  <script src="js/researchLogger.js"></script>
+  <script src="js/researchPanel.js"></script>
   <script src="js/app.js"></script>
   <script src="js/hero.js"></script>
   <script>

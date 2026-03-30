@@ -13,18 +13,25 @@ const MarioSpin = (() => {
 
   const RAW = 'https://raw.githubusercontent.com/www-infinity4/Mario-spin/main/';
 
+  // Symbol definitions — each maps to a radio genre tag
   const SYMBOLS = [
     { id: 'mushroom', emoji: '🍄', label: 'MUSHROOM', value: 6,  pool: 4,
+      radioTag: 'police',    radioEmoji: '🚔', radioLabel: 'Police Scanner',
       img: RAW + '1200px-SMP_Dash_Mushroom.png' },
     { id: 'star',     emoji: '⭐', label: 'STAR',     value: 10, pool: 1,
+      radioTag: 'jazz',      radioEmoji: '🎷', radioLabel: 'Jazz',
       img: RAW + 'Cute-3D-Mario-Super-Star-PNG-Vector-Golden-Color-Cartoon-Nintendo.jpg' },
     { id: 'goomba',   emoji: '👾', label: 'GOOMBA',   value: 2,  pool: 5,
+      radioTag: 'military',  radioEmoji: '🧱', radioLabel: 'Military Comms',
       img: RAW + 'Goomba_by_Shigehisa_Nakaue.png' },
     { id: 'mario',    emoji: '🎮', label: 'MARIO',    value: 8,  pool: 2,
+      radioTag: 'pop',       radioEmoji: '🎵', radioLabel: 'Pop',
       img: RAW + 'Recordando-Super-Mario-Bros-NES-10.jpg' },
     { id: 'luigi',    emoji: '🟢', label: 'LUIGI',    value: 5,  pool: 3,
+      radioTag: 'ambient',   radioEmoji: '🌊', radioLabel: 'Ambient',
       img: RAW + '3a083df05201781d56433d893565e39edca3e161_large.jpg' },
     { id: 'coin',     emoji: '🪙', label: 'COIN',     value: 3,  pool: 4,
+      radioTag: 'news',      radioEmoji: '📰', radioLabel: 'News',
       img: RAW + '3d2e69f35ad37e1d79141b16ab2f341c.jpg' },
   ];
 
@@ -143,6 +150,9 @@ const MarioSpin = (() => {
     resultEl.className = 'ms-result';
     if (winOv) winOv.hidden = true;
 
+    // Play spin jingle
+    if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('spin');
+
     // Determine final outcome
     const finals = [0,1,2,3,4].map(() => _rand());
 
@@ -180,25 +190,33 @@ const MarioSpin = (() => {
 
     if (maxCount === 5) {
       coins = topSym.value * 50;
-      label = `🌟 JACKPOT! 5× ${topSym.emoji} ${topSym.label} — +${coins} COINS!`;
+      label = `🌟 JACKPOT! 5× ${topSym.emoji} ${topSym.label} — +${coins} COINS! 🎵🎬🎮`;
       cls   = 'ms-result--jackpot';
       winColor = '#ffd166';
       _flash('🌟 JACKPOT!', winColor);
+      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 4);
+      if (typeof RewardVault    !== 'undefined') RewardVault.award(5, topSym.label);
     } else if (maxCount === 4) {
       coins = topSym.value * 20;
-      label = `💥 BIG WIN! 4× ${topSym.emoji} ${topSym.label} — +${coins} COINS!`;
+      label = `💥 4× ${topSym.emoji} ${topSym.label} — +${coins} COINS! 🎮 Game token earned!`;
       cls   = 'ms-result--bigwin';
       winColor = '#7b5cfa';
-      _flash('💥 BIG WIN!', winColor);
+      _flash('💥 GAME TOKEN!', winColor);
+      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 3);
+      if (typeof RewardVault    !== 'undefined') RewardVault.award(4, topSym.label);
     } else if (maxCount === 3) {
       coins = topSym.value * 5;
-      label = `✨ WIN! 3× ${topSym.emoji} ${topSym.label} — +${coins} COINS!`;
+      label = `✨ 3× ${topSym.emoji} ${topSym.label} — +${coins} COINS! 🎬 Video token earned!`;
       cls   = 'ms-result--win';
-      _flash('✨ WIN!', '#00d4ff');
+      _flash('🎬 VIDEO TOKEN!', '#00d4ff');
+      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 2);
+      if (typeof RewardVault    !== 'undefined') RewardVault.award(3, topSym.label);
     } else if (maxCount === 2) {
       coins = topSym.value;
-      label = `⚡ Pair! 2× ${topSym.emoji} — +${coins} coin`;
+      label = `⚡ Pair! 2× ${topSym.emoji} — +${coins} coin 🎵 Music token earned!`;
       cls   = 'ms-result--pair';
+      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 1);
+      if (typeof RewardVault    !== 'undefined') RewardVault.award(2, topSym.label);
     } else {
       label = `No match — try again! 🍄`;
       cls   = 'ms-result--miss';
@@ -213,11 +231,14 @@ const MarioSpin = (() => {
     if (resultText) resultText.textContent = label;
     if (resultEl)   resultEl.className = `ms-result ${cls}`;
 
+    // Tune radio to winning symbol's genre if it's a real win
+    if (coins > 0 && topSym.radioTag && typeof window._onMarioSlotWin === 'function') {
+      window._onMarioSlotWin(topSym, maxCount);
+    }
+
     // Hook into BtcHarvester on a winning spin
     if (coins > 0 && typeof BtcHarvester !== 'undefined') {
       BtcHarvester.emit(`Mario Spin — ${topSym.emoji} ×${maxCount} (+${coins} coins)`);
-      // Re-render harvest totals if the panel is visible
-      if (typeof _refreshHarvest === 'function') _refreshHarvest();
     }
 
     const btn = document.getElementById('msSpinBtn');
