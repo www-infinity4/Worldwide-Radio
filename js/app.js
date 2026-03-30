@@ -488,6 +488,23 @@
       UserProfile.logCrush(result);
       showToast(`${channel.emoji} ${channel.label} — Block #${height.toLocaleString()}`);
 
+      // Signal Coin — generate nuclear fingerprint from this hash
+      _renderSignalCoin(result);
+
+      // BTC Harvest Feed — emit a simulated harvest transaction
+      if (typeof BtcHarvester !== "undefined") {
+        BtcHarvester.emit(`₿ Crush → ${channel.emoji} ${channel.label} · Block #${height.toLocaleString()}`);
+        _renderHarvestFeed();
+      }
+
+      // Ticker update
+      _updateTicker(result);
+
+      // Synapse memory — remember this crush
+      if (typeof Synapse !== "undefined") {
+        Synapse.remember("user", `Bitcoin Crush: block #${height} → ${channel.label} (hash ${hash.slice(0,16)})`, "signal");
+      }
+
       // Write spin to GitHub research file if a GHP token is configured
       if (typeof BitcoinResearchWriter !== "undefined") {
         BitcoinResearchWriter.write(result).then((written) => {
@@ -531,6 +548,127 @@
     }
     // Delay first poll by 30 s so page load finishes first
     setTimeout(() => { poll(); setInterval(poll, BLOCK_POLL_MS); }, 30_000);
+  }
+
+  // ── BTC Ticker renderer ───────────────────────────────────────────────────
+
+  function _renderTicker() {
+    const track = document.getElementById("btcTickerTrack");
+    if (!track) return;
+
+    const items = [
+      { label: "BTC BLOCK",   id: "tickerBlock",   val: "…" },
+      { label: "HASH",        id: "tickerHash",    val: "…" },
+      { label: "GENRE INDEX", id: "tickerIndex",   val: "…" },
+      { label: "SESSION ₿",   id: "tickerSession", val: "0.00000000" },
+      { label: "YOUR 8%",     id: "tickerUser",    val: "0.00000000" },
+      { label: "SPINS",       id: "tickerSpins",   val: "0" },
+    ];
+
+    // Duplicate for seamless loop
+    const html = [...items, ...items].map((it) =>
+      `<span class="ticker-item">
+         <span class="ticker-label">${it.label}</span>
+         <span class="ticker-value" id="${it.id}">${it.val}</span>
+       </span>`
+    ).join('<span class="ticker-item" aria-hidden="true">·</span>');
+
+    track.innerHTML = html;
+  }
+
+  function _updateTicker(result) {
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    if (!result) return;
+    set("tickerBlock", `#${result.height ? result.height.toLocaleString() : "—"}`);
+    set("tickerHash",  result.hash ? result.hash.slice(0, 12) + "…" : "—");
+    set("tickerIndex", result.index !== undefined ? `${result.index}/15` : "—");
+  }
+
+  function _updateHarvestTicker(state) {
+    if (!state) return;
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    set("tickerSession", (state.total  || 0).toFixed(8));
+    set("tickerUser",    (state.user   || 0).toFixed(8));
+    set("tickerSpins",   (state.spins  || 0).toString());
+  }
+
+  // ── Harvest Feed renderer ─────────────────────────────────────────────────
+
+  function _renderHarvestFeed() {
+    if (typeof BtcHarvester === "undefined") return;
+
+    const state  = BtcHarvester.getState();
+    const txList = document.getElementById("harvestTxList");
+    const totEl  = document.getElementById("harvestTotal");
+    const usrEl  = document.getElementById("harvestUser");
+
+    if (totEl) totEl.textContent = (state.total || 0).toFixed(8) + " ₿";
+    if (usrEl) usrEl.textContent = (state.user  || 0).toFixed(8) + " ₿";
+
+    _updateHarvestTicker(state);
+
+    if (!txList) return;
+    txList.innerHTML = "";
+    (state.txs || []).slice(0, 20).forEach((tx) => {
+      const li = document.createElement("li");
+      li.className = "harvest-tx harvest-tx--new";
+      li.innerHTML = `
+        <span class="htx-icon">${tx.icon || "⛓"}</span>
+        <span class="htx-action">${tx.action || ""}</span>
+        <span class="htx-btc">${(tx.amount || 0).toFixed(8)} ₿</span>
+        <span class="htx-hash">${(tx.hash || "").slice(0, 8)}</span>
+        <span class="htx-time">${tx.time || ""}</span>
+      `;
+      txList.appendChild(li);
+      setTimeout(() => li.classList.remove("harvest-tx--new"), 2000);
+    });
+  }
+
+  // ── Signal Coin renderer ──────────────────────────────────────────────────
+
+  function _renderSignalCoin(result) {
+    if (typeof SignalCoin === "undefined" || !result) return;
+
+    const profile = SignalCoin.generate(result.hash, result.height);
+    if (!profile) return;
+
+    const idEl   = document.getElementById("coinId");
+    const compEl = document.getElementById("coinComposite");
+    const domEl  = document.getElementById("coinDominant");
+    const idle   = document.getElementById("coinIdle");
+    const modes  = document.getElementById("coinModes");
+    const meta   = document.getElementById("coinMeta");
+    const logBtn = document.getElementById("coinStudyBtn");
+
+    if (idEl)   idEl.textContent   = profile.coinId;
+    if (compEl) compEl.textContent = profile.composite + "%";
+    if (domEl)  domEl.textContent  = `${profile.dominant.emoji} ${profile.dominant.label}`;
+    if (idle)   idle.hidden        = true;
+    if (meta)   meta.hidden        = false;
+    if (logBtn) logBtn.hidden      = false;
+
+    if (modes) {
+      modes.hidden = false;
+      modes.innerHTML = profile.modes.map((m) => `
+        <div class="coin-mode-row">
+          <span class="coin-mode-emoji">${m.emoji}</span>
+          <div class="coin-mode-bar-wrap">
+            <div class="coin-mode-bar" style="width:${m.value}%;background:${m.color};color:${m.color}"></div>
+          </div>
+          <span class="coin-mode-val">${m.label} ${m.value}%</span>
+        </div>
+      `).join("");
+    }
+
+    // Auto-log to research panel
+    if (typeof ResearchPanel !== "undefined") {
+      ResearchPanel.logCoinStudy({
+        coinId:    profile.coinId,
+        dominant:  profile.dominant,
+        composite: profile.composite,
+        height:    result.height,
+      });
+    }
   }
 
   // ── Toast notifications ───────────────────────────────────────────────────
