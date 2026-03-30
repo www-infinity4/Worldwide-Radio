@@ -29,6 +29,18 @@ const Visualiser = (() => {
   const GOLD       = "#ffd166";
   const PURPLE     = "#7b5cfa";
 
+  // Tricorder mode colours (Star Trek medical scanner green)
+  const TRI_LOW    = "#00ff9f";
+  const TRI_MID    = "#00e5cc";
+  const TRI_HIGH   = "#39ff14";
+
+  let tricorderMode = false;
+
+  /** Toggle tricorder (medical scanner) colour mode. */
+  function setTricorderMode(on) {
+    tricorderMode = !!on;
+  }
+
   /** Lazily create the AudioContext (must be after user gesture on most browsers). */
   function ensureContext(audioEl) {
     if (audioCtx) return true;
@@ -124,30 +136,36 @@ const Visualiser = (() => {
       const x      = i * (barW + BAR_GAP);
       const y      = H - barH;
 
-      // Gradient colour: cyan (low) → gold (mid) → purple (high)
+      // Colour scheme: normal (cyan→gold→purple) or tricorder (greens)
       let colour;
-      if (ratio < 0.4) {
-        colour = CYAN;
-      } else if (ratio < 0.75) {
-        colour = GOLD;
+      if (tricorderMode) {
+        colour = ratio < 0.4 ? TRI_LOW : ratio < 0.75 ? TRI_MID : TRI_HIGH;
       } else {
-        colour = PURPLE;
+        colour = ratio < 0.4 ? CYAN : ratio < 0.75 ? GOLD : PURPLE;
       }
 
       // Glow effect
-      ctx.shadowBlur  = 6;
+      ctx.shadowBlur  = tricorderMode ? 10 : 6;
       ctx.shadowColor = colour;
 
-      ctx.fillStyle = colour;
+      ctx.fillStyle   = colour;
       ctx.globalAlpha = 0.6 + ratio * 0.4;
       ctx.fillRect(x, y, barW, barH);
+    }
+
+    // Tricorder scanline overlay
+    if (tricorderMode) {
+      const scanY = ((Date.now() / 8) % H);
+      ctx.globalAlpha = 0.18;
+      ctx.fillStyle   = TRI_LOW;
+      ctx.fillRect(0, scanY, W, 2);
     }
 
     ctx.shadowBlur  = 0;
     ctx.globalAlpha = 1;
   }
 
-  return { init, start, stop };
+  return { init, start, stop, setTricorderMode };
 })();
 
 // CommonJS compat for testing

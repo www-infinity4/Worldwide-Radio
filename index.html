@@ -68,6 +68,7 @@
         <li><a href="https://github.com/www-infinity/Bob-Segar-s-Musiverse"   target="_blank" rel="noopener">Bob Seger's Musiverse</a></li>
         <li><a href="https://github.com/www-infinity/Zelda-NES"               target="_blank" rel="noopener">Zelda NES</a></li>
         <li><a href="https://github.com/www-infinity/NES-Mario-World-Extravaganza-The-Wizard-Platform" target="_blank" rel="noopener">Mario World</a></li>
+        <li><a href="https://github.com/www-infinity4/Mario-spin"                                       target="_blank" rel="noopener">🍄 Mario Spin</a></li>
         <li><a href="https://github.com/www-infinity/Wizard-NES-Movie-Website-Cartoon-Movie-Theater"   target="_blank" rel="noopener">Wizard Movie Theater</a></li>
         <li><a href="https://github.com/www-infinity/Aces"                    target="_blank" rel="noopener">Aces</a></li>
 
@@ -206,6 +207,68 @@
   </section>
 
   <!-- ════════════════════════════════════════════════════════
+       BTC TICKER — Squashed hash signal strip
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="btc-ticker-wrap" aria-hidden="true">
+    <div class="btc-ticker-track" id="btcTickerTrack"><!-- populated by app.js --></div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       MARIO SPIN — 5-reel Power-Up Slot
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="app-shell mario-shell" aria-labelledby="marioSpinTitle">
+    <div id="marioSpinMount"></div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       SIGNAL COIN — Nuclear fingerprint · 7-mode profile
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="app-shell coin-shell" aria-labelledby="coinTitle">
+    <div class="coin-card glass-card" id="coinCard">
+
+      <div class="coin-header">
+        <div>
+          <h2 class="coin-title" id="coinTitle">
+            <span class="coin-icon" aria-hidden="true">🪙</span>
+            Signal Coin
+          </h2>
+          <p class="coin-sub">Nuclear fingerprint · Gold plasmonic · 7-mode signal profile</p>
+        </div>
+        <button class="btn-secondary coin-study-btn" id="coinStudyBtn" hidden
+                aria-label="Log this coin study to research panel">
+          📝 Log Study
+        </button>
+      </div>
+
+      <!-- Idle state -->
+      <div class="coin-idle" id="coinIdle">
+        <span class="coin-idle-icon" aria-hidden="true">🪙</span>
+        <p class="coin-idle-text">Spin the Bitcoin Crusher to generate a coin signal profile</p>
+      </div>
+
+      <!-- 7-mode bars (hidden until first spin) -->
+      <div class="coin-modes" id="coinModes" hidden aria-label="Signal modes"></div>
+
+      <!-- Coin metadata -->
+      <div class="coin-meta" id="coinMeta" hidden>
+        <div class="coin-meta-item">
+          <span class="coin-meta-label">Coin ID</span>
+          <code class="coin-meta-value" id="coinId">—</code>
+        </div>
+        <div class="coin-meta-item">
+          <span class="coin-meta-label">Composite Signal</span>
+          <span class="coin-meta-value" id="coinComposite">—</span>
+        </div>
+        <div class="coin-meta-item">
+          <span class="coin-meta-label">Dominant Mode</span>
+          <span class="coin-meta-value" id="coinDominant">—</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
        MAIN APP SHELL
   ═══════════════════════════════════════════════════════════ -->
   <div class="app-shell">
@@ -301,7 +364,12 @@
 
     <!-- ── Now Playing card ─────────────────────────────────── -->
     <section class="now-playing glass-card" id="nowPlaying" aria-label="Now playing" hidden>
-      <h2 id="stationName"></h2>
+      <div class="now-playing-top">
+        <h2 id="stationName"></h2>
+        <button class="tricorder-btn" id="tricorderBtn" title="Toggle Tricorder Mode" aria-pressed="false">
+          🖖 Tricorder
+        </button>
+      </div>
       <div class="now-playing-meta">
         <span id="stationTags"></span>
         <span id="stationCountry"></span>
