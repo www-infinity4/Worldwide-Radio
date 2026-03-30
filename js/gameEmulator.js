@@ -58,6 +58,8 @@ const GameEmulator = (() => {
   let canvas    = null;
   let ctx2d     = null;
   let running   = false;
+  let _demoTimer = null;   // setInterval handle for 90-second demo countdown
+  let _demoGame  = null;   // game metadata passed in from GameSpinner
 
   // ── Credit management ─────────────────────────────────────────────────────
 
@@ -174,6 +176,75 @@ const GameEmulator = (() => {
 
     _log('▶ Emulator running. Arrow keys · Z=A · X=B · Enter=Start');
     _attachKeys();
+
+    // Start 90-second demo timer if a game context was passed
+    if (_demoGame) _startDemoTimer(_demoGame);
+  }
+
+  // ── 90-second Demo Timer ──────────────────────────────────────────────────
+
+  const DEMO_SECONDS = 90;
+
+  function startDemoSession(game) {
+    _demoGame = game;
+  }
+
+  function _startDemoTimer(game) {
+    // Clear any previous timer
+    if (_demoTimer) clearInterval(_demoTimer);
+
+    let remaining = DEMO_SECONDS;
+    _updateDemoBar(remaining);
+
+    const barWrap = document.getElementById('emuDemoWrap');
+    if (barWrap) barWrap.hidden = false;
+
+    _demoTimer = setInterval(() => {
+      remaining--;
+      _updateDemoBar(remaining);
+
+      if (remaining <= 0) {
+        clearInterval(_demoTimer);
+        _demoTimer = null;
+        _endDemo(game);
+      }
+    }, 1000);
+  }
+
+  function _updateDemoBar(remaining) {
+    const pct    = Math.round((remaining / DEMO_SECONDS) * 100);
+    const bar    = document.getElementById('emuDemoBar');
+    const label  = document.getElementById('emuDemoLabel');
+    if (bar)   bar.style.width = `${pct}%`;
+    if (label) label.textContent = `Demo: ${remaining}s`;
+  }
+
+  function _endDemo(game) {
+    // Pause the emulator
+    running = false;
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+
+    _log(`⏱ Demo ended for ${game ? game.label : 'this game'}. Thanks for playing!`);
+
+    // Show the "find full game" panel
+    const findPanel = document.getElementById('emuFindPanel');
+    if (findPanel && game) {
+      const q = encodeURIComponent(game.label + ' NES');
+      document.getElementById('emuFindTitle').textContent = game.label;
+      document.getElementById('emuFindEbay').href    = `https://www.ebay.com/sch/i.html?_nkw=${q}+cartridge`;
+      document.getElementById('emuFindAmazon').href  = `https://www.amazon.com/s?k=${q}`;
+      document.getElementById('emuFindArchive').href = `https://archive.org/search?query=${q}`;
+      document.getElementById('emuFindNSO').href     = 'https://www.nintendo.com/switch/online/';
+      findPanel.hidden = false;
+    }
+
+    // Hide demo bar
+    const barWrap = document.getElementById('emuDemoWrap');
+    if (barWrap) barWrap.hidden = true;
+
+    // Award signal value XP for completing a demo
+    if (typeof LevelSystem !== 'undefined') LevelSystem.awardXP('playGame');
+    if (typeof SignalValue !== 'undefined') SignalValue.add('demo', 12);
   }
 
   function _stopEmulator() {
@@ -298,6 +369,15 @@ const GameEmulator = (() => {
 
         <!-- Emulator display (hidden until game loads) -->
         <div class="emu-display" id="emuDisplay" hidden>
+
+          <!-- 90-second demo countdown bar -->
+          <div class="emu-demo-wrap" id="emuDemoWrap" hidden>
+            <div class="emu-demo-track">
+              <div class="emu-demo-bar" id="emuDemoBar" style="width:100%"></div>
+            </div>
+            <span class="emu-demo-label" id="emuDemoLabel">Demo: 90s</span>
+          </div>
+
           <canvas
             id="emuCanvas"
             class="emu-canvas"
@@ -313,6 +393,22 @@ const GameEmulator = (() => {
             <button class="btn-secondary" id="emuPauseBtn">⏸ Pause</button>
             <button class="btn-danger"    id="emuStopBtn">⏹ Stop</button>
           </div>
+        </div>
+
+        <!-- "Find the full game" panel — shown after demo ends -->
+        <div class="emu-find-panel" id="emuFindPanel" hidden>
+          <div class="emu-find-header">
+            <span class="emu-find-title-label">⏱ Demo complete —</span>
+            <strong class="emu-find-title" id="emuFindTitle">Game</strong>
+          </div>
+          <p class="emu-find-sub">Liked it? Find the full cartridge or a legal copy:</p>
+          <div class="emu-find-links">
+            <a class="emu-find-link" id="emuFindEbay"    href="#" target="_blank" rel="noopener">🛒 eBay cartridge</a>
+            <a class="emu-find-link" id="emuFindAmazon"  href="#" target="_blank" rel="noopener">📦 Amazon</a>
+            <a class="emu-find-link" id="emuFindArchive" href="#" target="_blank" rel="noopener">📼 Archive.org</a>
+            <a class="emu-find-link" id="emuFindNSO"     href="#" target="_blank" rel="noopener">🎮 Nintendo Switch Online</a>
+          </div>
+          <button class="btn-secondary emu-find-replay" id="emuFindReplay">🔁 Spin again for another demo</button>
         </div>
 
         <!-- Console log -->
@@ -337,14 +433,25 @@ const GameEmulator = (() => {
     const stopBtn = document.getElementById('emuStopBtn');
     if (stopBtn) stopBtn.addEventListener('click', () => {
       _stopEmulator();
+      if (_demoTimer) { clearInterval(_demoTimer); _demoTimer = null; }
+      const barWrap = document.getElementById('emuDemoWrap');
+      if (barWrap) barWrap.hidden = true;
       _log('⏹ Game stopped.');
     });
 
+    const replayBtn = document.getElementById('emuFindReplay');
+    if (replayBtn) replayBtn.addEventListener('click', () => {
+      const findPanel = document.getElementById('emuFindPanel');
+      if (findPanel) findPanel.hidden = true;
+      const spinShell = document.getElementById('gameSpinnerShell');
+      if (spinShell) spinShell.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
     _updateCreditsDisplay();
-    _log('System ready. Earn credits by winning Mario Spin → 3-of-a-kind!');
+    _log('System ready. Win 3-of-a-kind in the Game Spinner to play!');
   }
 
-  return { render, addCredits, launchROM, pauseEmulator };
+  return { render, addCredits, launchROM, pauseEmulator, startDemoSession };
 })();
 
 // CommonJS compat

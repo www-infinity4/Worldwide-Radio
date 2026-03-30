@@ -122,6 +122,53 @@ const GameSpinner = (() => {
     for (let i = 0; i < weight; i++) POOL.push(g);
   });
 
+  // ── Game Lore — auto-logged to Research Panel on match ───────────────────
+
+  const LORE = {
+    topgun:       'Top Gun: The Second Mission (Konami, 1990) — vertical scrolling jet fighter sequel. Radar sweeps, missile locks, carrier landings. Signal: precise control under pressure.',
+    ducktales:    'DuckTales (Capcom, 1989) — Scrooge McDuck treasure hunts across 5 worlds. Designed by Tokuro Fujiwara. Signal: adventure pays when you stay curious.',
+    terminator:   'Terminator 2: Judgment Day (LJN, 1991) — fight through the machine war. Sparse signal, high stakes. Dark frequency at its finest.',
+    dragonwarrior:'Dragon Warrior III (Enix, 1988) — the RPG that shaped a genre. Day/night cycle, class system, party building. Signal: deep study multiplies your power.',
+    flappy:       'Flappy Bird NES Homebrew — the impossible arcade reflex test, ported to NES by fans. Signal: small margins, infinite runs.',
+    invaders:     'Invaders NES Homebrew — classic space defense reimagined. Wave after wave. Signal: pattern recognition is everything.',
+    nova:         'Nova the Squirrel (2019, homebrew) — full NES platformer by Raftronaut. Signal: free creative work carries its own frequency.',
+    madwizard:    'Mad Wizard NES Homebrew — dungeon spell-caster. Signal: knowledge applied becomes power.',
+  };
+
+  // ── Daily Featured Game — derived from BTC block hash ────────────────────
+  // Changes each time a new block is crushed. Highlighted in the reel.
+
+  let _featuredId = null;
+
+  function setFeaturedFromHash(hash) {
+    if (!hash) return;
+    const idx     = parseInt(hash.slice(0, 8), 16) % GAMES.length;
+    _featuredId   = GAMES[idx].id;
+    _renderFeaturedBadge();
+  }
+
+  function _renderFeaturedBadge() {
+    const badge = document.getElementById('gsFeaturedBadge');
+    const game  = GAMES.find((g) => g.id === _featuredId);
+    if (badge && game) {
+      badge.textContent = `⭐ Today's featured: ${game.emoji} ${game.label}`;
+      badge.style.color = game.color;
+      badge.hidden      = false;
+    }
+  }
+
+  // ── Combo Chain — fired if Mario Spin was won this session ───────────────
+  // app.js sets window._lastMarioSpinWin = true on any Mario Spin match
+
+  function _checkCombo(game) {
+    if (!window._lastMarioSpinWin) return;
+    window._lastMarioSpinWin = false;
+    _showToast(`🔗 COMBO CHAIN! Mario + Game Spin → ×2 signal value`, '#ffd166');
+    if (typeof SignalValue  !== 'undefined') SignalValue.add('combo', 20);
+    if (typeof LevelSystem  !== 'undefined') LevelSystem.awardXP('jackpot');
+    if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 4);
+  }
+
   let spinning = false;
   let spinCount = 0;
 
@@ -168,7 +215,7 @@ const GameSpinner = (() => {
               <span class="gs-icon" aria-hidden="true">🎮</span>
               Game Spinner
             </h2>
-            <p class="gs-sub">3-reel · Line up 3 to play instantly · 1 token per round</p>
+            <p class="gs-sub">3-reel · Line up 3 to play instantly · 90-second demo · 1 token per round</p>
           </div>
           <div class="gs-stats">
             <span class="gs-stat-item">
@@ -181,6 +228,9 @@ const GameSpinner = (() => {
             </span>
           </div>
         </div>
+
+        <!-- Daily featured game badge (set from BTC hash) -->
+        <div class="gs-featured-badge" id="gsFeaturedBadge" hidden aria-live="polite"></div>
 
         <!-- 3 reels -->
         <div class="gs-reels-wrap">
@@ -207,6 +257,13 @@ const GameSpinner = (() => {
           </button>
         </div>
 
+        <!-- Game Lore card — appears on any match, shows history + research link -->
+        <div class="gs-lore-card" id="gsLoreCard" hidden>
+          <span class="gs-lore-icon" id="gsLoreIcon">📖</span>
+          <p class="gs-lore-text" id="gsLoreText"></p>
+          <button class="gs-lore-log-btn" id="gsLoreLogBtn">+ Log to Research</button>
+        </div>
+
         <!-- Launch panel — appears on 3-of-a-kind -->
         <div class="gs-launch-panel" id="gsLaunchPanel" hidden>
           <div class="gs-launch-inner">
@@ -214,7 +271,7 @@ const GameSpinner = (() => {
             <div class="gs-launch-info">
               <div class="gs-launch-title" id="gsLaunchTitle">Game Title</div>
               <div class="gs-launch-rom"   id="gsLaunchRom">ROM: —</div>
-              <div class="gs-launch-note">1 token · loads in emulator below</div>
+              <div class="gs-launch-note">90-second demo · 1 token · loads in emulator below</div>
             </div>
             <button class="gs-launch-btn" id="gsLaunchBtn">
               ▶ PLAY NOW
@@ -229,6 +286,10 @@ const GameSpinner = (() => {
 
     document.getElementById('gsSpinBtn').addEventListener('click', spin);
     document.getElementById('gsLaunchBtn').addEventListener('click', _launchGame);
+    document.getElementById('gsLoreLogBtn').addEventListener('click', _logLoreToResearch);
+
+    // Restore featured badge if hash was already set
+    if (_featuredId) _renderFeaturedBadge();
   }
 
   // ── Spin logic ────────────────────────────────────────────────────────────
@@ -298,11 +359,17 @@ const GameSpinner = (() => {
     const winOv      = document.getElementById('gsWinOverlay');
     const launchPnl  = document.getElementById('gsLaunchPanel');
 
+    // Always show lore on any game appearing (even no match — knowledge is free)
+    _showLore(topGame);
+
+    // Featured game bonus — extra XP if today's featured lands
+    const isFeatured = topId === _featuredId;
+
     if (maxCount >= 3) {
-      // ── JACKPOT — load game ──────────────────────────────────────────────
+      // ── JACKPOT — unlock game ────────────────────────────────────────────
       _pendingGame = topGame;
 
-      resultText.textContent = `🎮 3× ${topGame.emoji} ${topGame.label} — GAME UNLOCKED!`;
+      resultText.textContent = `🎮 3× ${topGame.emoji} ${topGame.label} — GAME UNLOCKED!${isFeatured ? ' ⭐ FEATURED BONUS!' : ''}`;
       resultEl.className     = 'gs-result gs-result--jackpot';
 
       if (winOv) {
@@ -318,7 +385,7 @@ const GameSpinner = (() => {
         document.getElementById('gsLaunchRom').textContent   = topGame.romLabel;
         const coverEl = document.getElementById('gsLaunchCover');
         if (coverEl) {
-          coverEl.src = topGame.cover || '';
+          coverEl.src    = topGame.cover || '';
           coverEl.hidden = !topGame.cover;
         }
         launchPnl.hidden = false;
@@ -330,11 +397,30 @@ const GameSpinner = (() => {
         if (reel && ids[i] === topId) reel.classList.add('gs-reel--match');
       });
 
-      // Award XP + play chiptune fanfare
-      if (typeof LevelSystem    !== 'undefined') LevelSystem.awardXP('fourOak');
+      // Chiptune genre lock — play a matching audio theme
       if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 3);
-      if (typeof BtcHarvester   !== 'undefined') BtcHarvester.emit(`Game Spin 🎮 3× ${topGame.label}`);
-      if (typeof Synapse        !== 'undefined') Synapse.remember('user', `Game Spinner: 3× ${topGame.label} — game unlocked`, 'signal');
+      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('radio', topGame.radioTag);
+
+      // Tune radio to match the game's genre
+      if (topGame.radioTag && typeof window._onMarioSlotWin === 'function') {
+        window._onMarioSlotWin(
+          { radioTag: topGame.radioTag, emoji: topGame.emoji,
+            label: topGame.label, radioEmoji: '🎮', radioLabel: topGame.label },
+          3
+        );
+      }
+
+      // XP + harvest + memory
+      if (typeof LevelSystem  !== 'undefined') LevelSystem.awardXP(isFeatured ? 'jackpot' : 'fourOak');
+      if (typeof BtcHarvester !== 'undefined') BtcHarvester.emit(`Game Spin 🎮 3× ${topGame.label}`);
+      if (typeof Synapse      !== 'undefined') Synapse.remember('user', `Game Spinner: 3× ${topGame.label} — game unlocked`, 'signal');
+      if (typeof SignalValue  !== 'undefined') SignalValue.add('gameSpin', isFeatured ? 25 : 15);
+
+      // Combo chain check
+      _checkCombo(topGame);
+
+      // Flag for Mario Spin combo detection
+      window._lastGameSpinWin = true;
 
     } else if (maxCount === 2) {
       // ── PAIR — game token ────────────────────────────────────────────────
@@ -345,6 +431,8 @@ const GameSpinner = (() => {
 
       if (typeof LevelSystem    !== 'undefined') LevelSystem.awardXP('pair');
       if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 1);
+      if (typeof SignalValue    !== 'undefined') SignalValue.add('gameSpin', 5);
+      window._lastGameSpinWin = true;
 
     } else {
       // ── NO MATCH ─────────────────────────────────────────────────────────
@@ -352,6 +440,7 @@ const GameSpinner = (() => {
       resultEl.className     = 'gs-result gs-result--miss';
 
       if (typeof LevelSystem !== 'undefined') LevelSystem.awardXP('spin');
+      if (typeof SignalValue !== 'undefined') SignalValue.add('spin', 1);
     }
 
     btn.disabled = false;
@@ -378,25 +467,71 @@ const GameSpinner = (() => {
       return;
     }
 
+    // Pass game metadata to emulator so demo timer shows "Find: X" panel
+    GameEmulator.startDemoSession(game);
+
     // Give 1 free credit for this spin win, then launch
     GameEmulator.addCredits(1);
     GameEmulator.launchROM(game.rom);
 
-    _showToast(`▶ Loading ${game.label} — ${game.romLabel}`, game.color);
+    _showToast(`▶ Loading ${game.label} — 90-second demo starts now!`, game.color);
+    if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('launch');
 
     // Synapse memory
     if (typeof Synapse !== 'undefined') {
-      Synapse.remember('user', `Launched game: ${game.label} (${game.romLabel})`, 'system');
+      Synapse.remember('user', `Launched game demo: ${game.label} (${game.romLabel})`, 'system');
     }
 
     // Award XP for playing
     if (typeof LevelSystem !== 'undefined') LevelSystem.awardXP('playGame');
+    if (typeof SignalValue  !== 'undefined') SignalValue.add('playGame', 12);
 
     // Hide launch panel
     const launchPnl = document.getElementById('gsLaunchPanel');
     if (launchPnl) launchPnl.hidden = true;
 
     _pendingGame = null;
+  }
+
+  // ── Game Lore card ────────────────────────────────────────────────────────
+
+  let _currentLoreGame = null;
+
+  function _showLore(game) {
+    _currentLoreGame = game;
+    const card  = document.getElementById('gsLoreCard');
+    const icon  = document.getElementById('gsLoreIcon');
+    const text  = document.getElementById('gsLoreText');
+    const lore  = LORE[game.id] || `${game.label} — ${game.theme}. Signal frequency: ${game.radioTag}.`;
+    if (!card) return;
+    if (icon) icon.textContent = game.emoji;
+    if (text) text.textContent = lore;
+    card.hidden = false;
+    card.style.borderColor = game.color;
+
+    // Auto-award signal value just for reading the lore
+    if (typeof SignalValue !== 'undefined') SignalValue.add('lore', 2);
+  }
+
+  function _logLoreToResearch() {
+    if (!_currentLoreGame) return;
+    const lore = LORE[_currentLoreGame.id] || _currentLoreGame.label;
+
+    if (typeof ResearchLogger !== 'undefined') {
+      ResearchLogger.add({
+        title:   `Game Signal: ${_currentLoreGame.label}`,
+        content: lore,
+        tags:    ['game', _currentLoreGame.radioTag, _currentLoreGame.theme],
+        source:  'Game Spinner',
+      });
+    }
+
+    if (typeof LevelSystem !== 'undefined') LevelSystem.awardXP('research');
+    if (typeof SignalValue !== 'undefined') SignalValue.add('research', 3);
+
+    _showToast(`📖 ${_currentLoreGame.label} logged to research!`, _currentLoreGame.color);
+    const btn = document.getElementById('gsLoreLogBtn');
+    if (btn) { btn.textContent = '✓ Logged!'; btn.disabled = true; }
   }
 
   // ── Token counter (local, visual only — vault holds real tokens) ──────────
@@ -411,6 +546,7 @@ const GameSpinner = (() => {
     // Also add to vault
     if (typeof GameEmulator !== 'undefined') GameEmulator.addCredits(1);
     _showToast('🎮 Game token earned — play later from the vault!', '#ffd166');
+    if (typeof SignalValue !== 'undefined') SignalValue.add('token', 5);
   }
 
   // ── Toast ─────────────────────────────────────────────────────────────────
@@ -432,7 +568,7 @@ const GameSpinner = (() => {
 
   // ── Public API ────────────────────────────────────────────────────────────
 
-  return { render, GAMES };
+  return { render, GAMES, setFeaturedFromHash };
 
 })();
 

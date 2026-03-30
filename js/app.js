@@ -67,6 +67,11 @@
       LevelSystem.init();
     }
 
+    // ── Signal Value — every action earns visible value ───────────────────
+    if (typeof SignalValue !== "undefined") {
+      SignalValue.init();
+    }
+
     // ── Mario Spin ─────────────────────────────────────────────────────────
     if (typeof MarioSpin !== "undefined") {
       MarioSpin.render("marioSpinMount");
@@ -145,6 +150,9 @@
         showToast(`${symbol.emoji} ${symbol.label} → ${symbol.radioEmoji} ${symbol.radioLabel}`);
         if (stations.length === 0) showError(`No stations found for "${symbol.radioLabel}".`);
         if (typeof LevelSystem !== "undefined") LevelSystem.awardXP("tune");
+        if (typeof SignalValue  !== "undefined") SignalValue.add("tune");
+        // Set combo flag so Game Spinner can detect Mario→Game chain
+        window._lastMarioSpinWin = true;
       } catch (_) {
         showError("Could not load stations for this channel.");
       } finally {
@@ -525,7 +533,11 @@
       showToast(`${channel.emoji} ${channel.label} — Block #${height.toLocaleString()}`);
 
       // Level System — award XP for a crush
-      if (typeof LevelSystem !== "undefined") LevelSystem.awardXP("crush");
+      if (typeof LevelSystem  !== "undefined") LevelSystem.awardXP("crush");
+      if (typeof SignalValue  !== "undefined") SignalValue.add("crush");
+
+      // Feed hash to Game Spinner for Daily Featured game
+      if (typeof GameSpinner !== "undefined") GameSpinner.setFeaturedFromHash(hash);
 
       // Signal Coin — generate nuclear fingerprint from this hash
       _renderSignalCoin(result);
