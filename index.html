@@ -2,12 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Worldwide Radio Scanner – stream live radio from any country, genre, or search term. Powered by Radio Browser API, Infinity Graphics &amp; Flux Capacitor." />
-  <title>Worldwide Radio Scanner · ∞ www-infinity</title>
+  <!-- Android / PWA chrome -->
+  <meta name="theme-color" content="#0d0f1a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <!-- iOS / Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="∞ Radio" />
+  <title>∞ Worldwide Radio · Power-Up &amp; Play</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Press+Start+2P&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -517,7 +524,7 @@
   <!-- ════════════════════════════════════════════════════════
        TOKEN VAULT — Music · Video · Games
   ═══════════════════════════════════════════════════════════ -->
-  <section class="app-shell vault-shell" id="vaultShell" hidden aria-labelledby="vaultTitle">
+  <section class="app-shell vault-shell" id="vaultShell" aria-labelledby="vaultTitle">
     <div id="vaultMount"></div>
     <!-- Warp list — session clone snapshots (⚪ Coin power) -->
     <div class="warp-shell glass-card" id="warpShell">
@@ -544,6 +551,20 @@
   <section class="app-shell emu-shell" id="emuShell" hidden
            aria-labelledby="emuTitle">
     <div id="emuMount"></div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       RESEARCH WRITER — AI document editor
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="app-shell rw-shell" id="rwShell" aria-labelledby="rwTitle">
+    <div id="rwMount"></div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       PIANO MINT — play a real tune, AI detects it, earn a token
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="app-shell piano-shell" id="pianoShell" aria-labelledby="pmTitle">
+    <div id="pianoMintMount"></div>
   </section>
 
   <!-- ════════════════════════════════════════════════════════
@@ -659,6 +680,22 @@
         committed to source code.
         Requires the token to have <strong>Contents: Write</strong> permission on this repo.
       </p>
+
+      <hr style="border-color:var(--glass-border);margin:1.25rem 0" />
+
+      <p class="profile-label">Account</p>
+      <label class="profile-label" for="newPasswordInput" style="margin-top:0.5rem">New Password</label>
+      <input type="password" id="newPasswordInput" placeholder="New password…"
+             style="width:100%;margin-bottom:0.4rem" autocomplete="new-password" />
+      <input type="password" id="confirmPasswordInput" placeholder="Confirm new password…"
+             style="width:100%;margin-bottom:0.6rem" autocomplete="new-password" />
+      <button class="btn-secondary" id="changePasswordBtn" style="width:100%;margin-bottom:0.5rem">
+        🔒 Change Password
+      </button>
+      <button class="btn-secondary" id="signOutBtn"
+              style="width:100%;background:rgba(255,71,87,0.12);border-color:var(--danger);color:var(--danger)">
+        ⏏ Sign Out
+      </button>
     </div>
   </dialog>
 
@@ -690,7 +727,58 @@
   <!-- Toast notification container -->
   <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="false"></div>
 
-  <!-- Scripts: profile → synapse → AI → dynamic nav → Bitcoin Crusher → radio browser → visualiser → research writer → signal coin → btc harvester → mario spin → chiptune → game emulator → reward vault → research logger → research panel → app → hero -->
+  <!-- ════════════════════════════════════════════════════════
+       LOGIN GATE — shown on first visit / session expiry
+       Hidden immediately if a valid session is present.
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="loginGate" class="login-gate" role="dialog" aria-modal="true" aria-label="Sign in" hidden>
+    <div class="login-box glass-card">
+      <!-- Animated coin row -->
+      <div class="login-coins" aria-hidden="true">
+        <span class="lc-coin">🪙</span>
+        <span class="lc-coin lc-coin--2">⭐</span>
+        <span class="lc-coin lc-coin--3">🍄</span>
+      </div>
+
+      <h1 class="login-title">INSERT COIN</h1>
+      <p class="login-sub" id="loginSub">Create your player profile to start</p>
+
+      <!-- Error strip -->
+      <p class="login-error" id="loginError" hidden></p>
+
+      <!-- Form -->
+      <div class="login-form">
+        <div class="login-field">
+          <label class="login-label" for="loginUsername">Player Name</label>
+          <input id="loginUsername" type="text" class="login-input"
+                 placeholder="Enter your name…" maxlength="32"
+                 autocomplete="username" autocapitalize="off" spellcheck="false" />
+        </div>
+        <div class="login-field" id="loginPassField">
+          <label class="login-label" for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" class="login-input"
+                 placeholder="Choose a password…" maxlength="72"
+                 autocomplete="current-password" />
+        </div>
+        <div class="login-field" id="loginConfirmField" hidden>
+          <label class="login-label" for="loginConfirm">Confirm Password</label>
+          <input id="loginConfirm" type="password" class="login-input"
+                 placeholder="Repeat password…" maxlength="72"
+                 autocomplete="new-password" />
+        </div>
+
+        <button class="login-btn" id="loginSubmit">▶ START GAME</button>
+
+        <p class="login-toggle-row">
+          <span id="loginToggleText">Already have a profile?</span>
+          <button class="login-toggle-btn" id="loginToggle">Sign in</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: login gate first, then profile → … -->
+  <script src="js/loginGate.js"></script>
   <script src="js/userProfile.js"></script>
   <script src="js/synapse.js"></script>
   <script src="js/aiAssistant.js"></script>
@@ -710,6 +798,9 @@
   <script src="js/levelSystem.js"></script>
   <script src="js/researchLogger.js"></script>
   <script src="js/researchPanel.js"></script>
+  <script src="js/researchWriter.js"></script>
+  <script src="js/pianoMint.js"></script>
+  <script src="js/arcadeFlow.js"></script>
   <script src="js/app.js"></script>
   <script src="js/hero.js"></script>
   <script>
@@ -867,6 +958,35 @@
             saveGhpBtn.after(savedMsg);
             setTimeout(() => savedMsg.remove(), 2000);
           }
+        });
+      }
+
+      // Change Password
+      const changePwBtn = document.getElementById("changePasswordBtn");
+      if (changePwBtn && typeof LoginGate !== "undefined") {
+        changePwBtn.addEventListener("click", async () => {
+          const np = document.getElementById("newPasswordInput").value;
+          const cp = document.getElementById("confirmPasswordInput").value;
+          if (!np) { alert("Enter a new password."); return; }
+          if (np !== cp) { alert("Passwords do not match."); return; }
+          const ok = await LoginGate.changePassword(np, cp);
+          if (ok) {
+            document.getElementById("newPasswordInput").value = "";
+            document.getElementById("confirmPasswordInput").value = "";
+            changePwBtn.textContent = "✓ Password updated!";
+            setTimeout(() => { changePwBtn.textContent = "🔒 Change Password"; }, 2500);
+          } else {
+            alert("Could not change password. Make sure it is at least 4 characters.");
+          }
+        });
+      }
+
+      // Sign Out
+      const signOutBtn = document.getElementById("signOutBtn");
+      if (signOutBtn && typeof LoginGate !== "undefined") {
+        signOutBtn.addEventListener("click", () => {
+          closeProfile();
+          LoginGate.signOut();
         });
       }
 

@@ -195,6 +195,9 @@ const RewardVault = (() => {
     _save(s);
     _updateBadges();
     _openVault();
+
+    // Notify ArcadeFlow that a token was earned (so it can flash the vault)
+    document.dispatchEvent(new CustomEvent('arcadeTokenEarned', { detail: { matchCount, symbolLabel } }));
   }
 
   function _spend(type) {

@@ -245,6 +245,9 @@ const GameEmulator = (() => {
     // Award signal value XP for completing a demo
     if (typeof LevelSystem !== 'undefined') LevelSystem.awardXP('playGame');
     if (typeof SignalValue !== 'undefined') SignalValue.add('demo', 12);
+
+    // Notify ArcadeFlow so it can show the full game-over experience
+    document.dispatchEvent(new CustomEvent('arcadeDemoEnd', { detail: { game } }));
   }
 
   function _stopEmulator() {

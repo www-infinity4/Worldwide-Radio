@@ -102,6 +102,21 @@
       ResearchPanel.init();
     }
 
+    // ── Research Writer ───────────────────────────────────────────────────
+    if (typeof ResearchWriter !== "undefined") {
+      ResearchWriter.render("rwMount");
+    }
+
+    // ── Piano Mint — 2-octave keyboard + AI tune recognition ─────────────
+    if (typeof PianoMint !== "undefined") {
+      PianoMint.render("pianoMintMount");
+    }
+
+    // ── Arcade Flow — slot→token→game→video→music→keyboard→slot chain ────
+    if (typeof ArcadeFlow !== "undefined") {
+      ArcadeFlow.init();
+    }
+
     // ── Tricorder button ──────────────────────────────────────────────────
     const tricorderBtn = document.getElementById("tricorderBtn");
     if (tricorderBtn) {
@@ -565,6 +580,11 @@
         }).catch((err) => {
           console.warn("[BitcoinResearchWriter] Write failed:", err);
         });
+      }
+
+      // Research Writer — auto-generate a research doc from this crush
+      if (typeof ResearchWriter !== "undefined") {
+        ResearchWriter.autoFromCrush({ height, hash, difficulty: result.difficulty, time: result.time });
       }
 
     } catch (err) {

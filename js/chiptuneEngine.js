@@ -401,6 +401,34 @@ const ChiptuneEngine = (() => {
     if (_loopTimer) { clearTimeout(_loopTimer); _loopTimer = null; }
   }
 
+  // ── Piano note (single key press) ─────────────────────────────────────────
+
+  /**
+   * Play a single piano note immediately — used by the Piano Mint keyboard.
+   * @param {string} name   – e.g. 'C4', 'F#3', 'A#4'
+   * @param {number} [dur]  – sustain in seconds (default 0.45)
+   */
+  function playNote(name, dur = 0.45) {
+    const ctx = _ctx();
+    if (!ctx) return;
+    const freq = NOTE[name];
+    if (!freq) return;
+    const t = ctx.currentTime + 0.005;
+    // Square wave with piano-like decay: sharp attack → exponential release
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type            = 'square';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0,     t);
+    gain.gain.linearRampToValueAtTime(0.22, t + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.10, t + 0.12);
+    gain.gain.linearRampToValueAtTime(0,    t + dur);
+    osc.connect(gain);
+    gain.connect(masterGain);
+    osc.start(t);
+    osc.stop(t + dur + 0.01);
+  }
+
   // ── Public dispatcher ──────────────────────────────────────────────────────
 
   /**
@@ -423,7 +451,7 @@ const ChiptuneEngine = (() => {
     }
   }
 
-  return { play, startLoop, stopLoop, setVolume, mute, unmute, NOTE };
+  return { play, startLoop, stopLoop, setVolume, mute, unmute, NOTE, playNote };
 })();
 
 // CommonJS compat
