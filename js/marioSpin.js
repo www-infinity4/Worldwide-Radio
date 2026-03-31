@@ -14,12 +14,12 @@ const MarioSpin = (() => {
   // Pinned to a stable commit so images never 404 as branch moves
   const RAW = 'https://raw.githubusercontent.com/www-infinity4/Mario-spin/a82cc26280ebfd35f667cce0011fa3e1985a81ab/assets/images/';
 
-  // Question-block variants & Luigi — uploaded as GitHub attachment assets
+  // Question-block variants & Luigi — local repo assets (no external dependency)
   const GH_ASSETS = {
-    blockWings: 'https://github.com/user-attachments/assets/52552d07-d706-400b-93ab-2640f7caf09c',
-    block3d:    'https://github.com/user-attachments/assets/3aca842a-9c9c-4a7d-ba4b-734e0ebaaa62',
-    blockFlat:  'https://github.com/user-attachments/assets/cd627b62-85d1-411e-987d-2fda8a90358a',
-    luigi:      'https://github.com/user-attachments/assets/7d7a87fa-da4a-4364-9557-a5965f71cb5f',
+    blockWings: '479-4793399_flying-question-block-mario-question-block-png-transparent.png',
+    block3d:    '132-1329592_super-mario-question-block-hd-png-download.png',
+    blockFlat:  '462-4627049_mario-question-mark-png-super-mario-3d-world.png',
+    luigi:      'Portrait.luigi.png',
   };
 
   // Symbol definitions — each maps to a radio genre tag
@@ -312,6 +312,22 @@ const MarioSpin = (() => {
 
     // Flag for Game Spinner combo detection
     if (coins > 0) window._lastMarioSpinWin = true;
+
+    // ── Research Writer — fires on EVERY spin, no API key needed ─────────
+    if (typeof ResearchWriter !== 'undefined') {
+      ResearchWriter.autoFromSpin({
+        source:      'Mario Spin',
+        symbolId:    topSym.id,
+        symbolLabel: topSym.label,
+        radioTag:    topSym.radioTag,
+        radioLabel:  topSym.radioLabel,
+        matchCount,
+        coins,
+        spinCount,
+        topic:       'signal',
+        title:       `Mario Spin #${spinCount} — ${topSym.label}${matchCount >= 2 ? ' ×' + matchCount : ''}`,
+      });
+    }
 
     const btn = document.getElementById('msSpinBtn');
     if (btn) {

@@ -135,6 +135,18 @@ const ArcadeFlow = (() => {
       </div>`;
   }
 
+  // ── Clip library — Zelda + Mario archive.org embeds (no token needed) ───────
+  const _CLIPS = [
+    { label: '🗡️ Zelda — Slime Busters',       embed: 'https://archive.org/embed/youtube-oxfgPWpaLJI',                                          start: 0   },
+    { label: '🗡️ Zelda — Series Ep 1',          embed: 'https://archive.org/embed/legend-of-zelda-1989-complete-series',                          start: 0   },
+    { label: '🗡️ Zelda — Series Ep 2',          embed: 'https://archive.org/embed/legend-of-zelda-1989-complete-series/Zelda_E02.mp4',            start: 60  },
+    { label: '🗡️ Zelda — Series Ep 3',          embed: 'https://archive.org/embed/legend-of-zelda-1989-complete-series/Zelda_E03.mp4',            start: 30  },
+    { label: '🍄 Mario — Super Show clip',       embed: 'https://archive.org/embed/youtube-oxfgPWpaLJI',                                          start: 180 },
+    { label: '⚡ Tesla — Genius Who Lit the World', embed: 'https://archive.org/embed/NikolaTesla-GeniusWhoLitTheWorld',                           start: 0   },
+    { label: '🚀 NASA Apollo 11',               embed: 'https://archive.org/embed/Apollo11_16mmMagazineS_SupQueenCamera',                          start: 0   },
+    { label: '🌌 Powers of Ten (1977)',          embed: 'https://archive.org/embed/powers_of_ten',                                                start: 0   },
+  ];
+
   // ── Game Over overlay ─────────────────────────────────────────────────────
 
   function _showGameOver() {
@@ -143,9 +155,6 @@ const ArcadeFlow = (() => {
 
     // Pick a random AI challenge to surface
     const challenge = _challenges[Math.floor(Math.random() * _challenges.length)];
-
-    const hasVideo = _getTokenCount('video') > 0;
-    const hasMusicToken = _getTokenCount('music') > 0;
 
     ov = document.createElement('div');
     ov.id = 'arcadeGameOver';
@@ -165,9 +174,9 @@ const ArcadeFlow = (() => {
           <span class="arcade-go-ch-reward">+${challenge.reward} token</span>
         </div>
 
-        <!-- Action buttons -->
+        <!-- Action buttons — Watch Clip always available, no token required -->
         <div class="arcade-go-actions">
-          ${hasVideo ? `<button class="arcade-go-btn arcade-go-btn--video" id="agoWatchBtn">🎬 Watch a Clip</button>` : ''}
+          <button class="arcade-go-btn arcade-go-btn--video" id="agoWatchBtn">🎬 Watch a Clip</button>
           <button class="arcade-go-btn arcade-go-btn--keys" id="agoPlayTuneBtn">🎹 Play a Tune → Mint Token</button>
           <button class="arcade-go-btn arcade-go-btn--spin" id="agoSpinBtn">🎰 Spin Again</button>
         </div>
@@ -179,12 +188,10 @@ const ArcadeFlow = (() => {
     requestAnimationFrame(() => ov.classList.add('visible'));
 
     // Wire buttons
-    if (hasVideo) {
-      document.getElementById('agoWatchBtn').addEventListener('click', () => {
-        ov.remove();
-        _spendVideoToken();
-      });
-    }
+    document.getElementById('agoWatchBtn').addEventListener('click', () => {
+      ov.remove();
+      _showClipPopup();
+    });
     document.getElementById('agoPlayTuneBtn').addEventListener('click', () => {
       ov.remove();
       _openKeyboardMint();
@@ -214,18 +221,77 @@ const ArcadeFlow = (() => {
     setTimeout(() => vault.classList.remove('arcade-vault-flash'), 1200);
   }
 
+  // ── Inline clip popup — auto-plays Zelda / Mario / Tesla / NASA clips ────
+  // No tokens required. Just press the button and watch.
+  function _showClipPopup() {
+    let pop = document.getElementById('arcadeClipPop');
+    if (pop) pop.remove();
+
+    const clip = _CLIPS[Math.floor(Math.random() * _CLIPS.length)];
+    const src  = clip.start > 0 ? `${clip.embed}?start=${clip.start}&autoplay=1` : `${clip.embed}?autoplay=1`;
+
+    pop = document.createElement('div');
+    pop.id        = 'arcadeClipPop';
+    pop.className = 'arcade-clip-pop';
+    pop.setAttribute('role', 'dialog');
+    pop.setAttribute('aria-label', 'Video clip player');
+    pop.innerHTML = `
+      <div class="arcade-clip-inner glass-card">
+        <div class="arcade-clip-header">
+          <span class="arcade-clip-label">${clip.label}</span>
+          <div class="arcade-clip-nav">
+            <button class="arcade-clip-btn-nav" id="arcadeClipPrev" aria-label="Previous clip">◀</button>
+            <button class="arcade-clip-btn-nav" id="arcadeClipNext" aria-label="Next clip">▶</button>
+            <button class="arcade-clip-close" id="arcadeClipClose" aria-label="Close">✕</button>
+          </div>
+        </div>
+        <iframe
+          id="arcadeClipFrame"
+          class="arcade-clip-frame"
+          src="${src}"
+          allowfullscreen
+          allow="autoplay; fullscreen"
+          title="${clip.label}"
+          loading="eager"
+        ></iframe>
+        <p class="arcade-clip-source">📼 Archive.org public domain · free to watch · no login needed</p>
+      </div>`;
+
+    document.body.appendChild(pop);
+    requestAnimationFrame(() => pop.classList.add('visible'));
+
+    let clipIdx = _CLIPS.indexOf(clip);
+
+    function loadClip(idx) {
+      clipIdx = (idx + _CLIPS.length) % _CLIPS.length;
+      const c   = _CLIPS[clipIdx];
+      const s   = c.start > 0 ? `${c.embed}?start=${c.start}&autoplay=1` : `${c.embed}?autoplay=1`;
+      const frm = document.getElementById('arcadeClipFrame');
+      const lbl = pop.querySelector('.arcade-clip-label');
+      if (frm) frm.src = s;
+      if (lbl) lbl.textContent = c.label;
+    }
+
+    document.getElementById('arcadeClipClose').addEventListener('click', () => pop.remove());
+    document.getElementById('arcadeClipPrev').addEventListener('click', () => loadClip(clipIdx - 1));
+    document.getElementById('arcadeClipNext').addEventListener('click', () => loadClip(clipIdx + 1));
+
+    // Also generate a research entry for watching
+    if (typeof ResearchWriter !== 'undefined') {
+      ResearchWriter.autoFromSpin({
+        source:      'Video Vault',
+        symbolLabel: clip.label,
+        radioLabel:  'Video Signal',
+        spinCount:   1,
+        topic:       'signal',
+        title:       `Watched: ${clip.label}`,
+      });
+    }
+  }
+
   function _spendVideoToken() {
-    // Open vault on video tab
-    const vault = document.getElementById('vaultShell');
-    if (vault) vault.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    // Click first video tab button
-    const videoTab = document.querySelector('.vault-tab-btn[data-tab="video"]');
-    if (videoTab) videoTab.click();
-    // Auto-click first video spend button
-    setTimeout(() => {
-      const btn = document.querySelector('.vault-spend-btn[data-vidx="0"]');
-      if (btn && !btn.disabled) btn.click();
-    }, 500);
+    // Now just opens the clip popup directly — no vault redirect
+    _showClipPopup();
   }
 
   function _openKeyboardMint() {

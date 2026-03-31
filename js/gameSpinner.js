@@ -29,7 +29,7 @@ const GameSpinner = (() => {
       id:     'topgun',
       label:  'TOP GUN',
       emoji:  '🛩',
-      cover:  'https://github.com/user-attachments/assets/4641a66d-9881-487b-89d6-3c5ae8c63ba2',
+      cover:  'TopGun2.jpg',
       rom:    RAW + 'obstacletrek.nes',
       romLabel: 'Obstacle Trek (free homebrew · action)',
       theme:  'aerial combat',
@@ -40,7 +40,7 @@ const GameSpinner = (() => {
       id:     'ducktales',
       label:  'DUCKTALES',
       emoji:  '🦆',
-      cover:  'https://github.com/user-attachments/assets/dda800be-0001-43a5-a841-a6db89c7c7f8',
+      cover:  'DuckTales2b.jpg',
       rom:    RAW + 'owlia.nes',
       romLabel: 'Owlia (free homebrew · adventure)',
       theme:  'treasure adventure',
@@ -51,7 +51,7 @@ const GameSpinner = (() => {
       id:     'terminator',
       label:  'TERMINATOR',
       emoji:  '🤖',
-      cover:  'https://github.com/user-attachments/assets/a616af94-e8f5-4f9f-a29f-2e219074d3c5',
+      cover:  'Terminator2.jpg',
       rom:    RAW + 'viruscleaner.nes',
       romLabel: 'Virus Cleaner (free homebrew · action)',
       theme:  'dark machine signal',
@@ -62,7 +62,7 @@ const GameSpinner = (() => {
       id:     'dragonwarrior',
       label:  'DRAGON WARRIOR',
       emoji:  '🐉',
-      cover:  'https://github.com/user-attachments/assets/51b10bb8-b5b2-4607-b2ff-5f2c638153d8',
+      cover:  'DragonWarrior3.jpg',
       rom:    RAW + 'driar.nes',
       romLabel: 'Driar (free homebrew · dungeon RPG)',
       theme:  'epic quest',
@@ -70,10 +70,54 @@ const GameSpinner = (() => {
       radioTag: 'world',
     },
     {
+      id:     'karatekid',
+      label:  'KARATE KID',
+      emoji:  '🥋',
+      cover:  'KarateKid.jpg',
+      rom:    RAW + 'vigilanteninja.nes',
+      romLabel: 'Vigilante Ninja (free homebrew · action)',
+      theme:  'martial arts discipline',
+      color:  '#06d6a0',
+      radioTag: 'electronic',
+    },
+    {
+      id:     'knightrider',
+      label:  'KNIGHT RIDER',
+      emoji:  '🚗',
+      cover:  'KnightRider.jpg',
+      rom:    RAW + 'obstacletrek.nes',
+      romLabel: 'Obstacle Trek (free homebrew · racing)',
+      theme:  'turbo machine intelligence',
+      color:  '#00d4ff',
+      radioTag: 'electronic',
+    },
+    {
+      id:     'rogerrabbit',
+      label:  'ROGER RABBIT',
+      emoji:  '🐰',
+      cover:  'RogerRabbit.jpg',
+      rom:    RAW + 'novathesquirrel.nes',
+      romLabel: 'Nova the Squirrel (free homebrew · platformer)',
+      theme:  'cartoon chaos signal',
+      color:  '#ffd166',
+      radioTag: 'pop',
+    },
+    {
+      id:     'starwars',
+      label:  'STAR WARS',
+      emoji:  '⚡',
+      cover:  'StarWars.jpg',
+      rom:    RAW + 'thwaite.nes',
+      romLabel: 'Thwaite (free homebrew · missile defense)',
+      theme:  'galactic force signal',
+      color:  '#ffd166',
+      radioTag: 'classical',
+    },
+    {
       id:     'flappy',
       label:  'FLAPPY BIRD',
       emoji:  '🐦',
-      cover:  null,  // uses emoji fallback
+      cover:  null,
       rom:    RAW + 'flappybird.nes',
       romLabel: 'Flappy Bird NES (homebrew)',
       theme:  'arcade challenge',
@@ -129,6 +173,10 @@ const GameSpinner = (() => {
     ducktales:    'DuckTales (Capcom, 1989) — Scrooge McDuck treasure hunts across 5 worlds. Designed by Tokuro Fujiwara. Signal: adventure pays when you stay curious.',
     terminator:   'Terminator 2: Judgment Day (LJN, 1991) — fight through the machine war. Sparse signal, high stakes. Dark frequency at its finest.',
     dragonwarrior:'Dragon Warrior III (Enix, 1988) — the RPG that shaped a genre. Day/night cycle, class system, party building. Signal: deep study multiplies your power.',
+    karatekid:    'The Karate Kid (LJN, 1987) — wax on, wax off, sweep the leg. Discipline as signal: every repetition tunes the frequency of the body. Signal: mastery through repetition.',
+    knightrider:  'Knight Rider (Ocean, 1988) — KITT, the AI car. Machine intelligence meets open highway. Signal: the road is a frequency band; every mile is a wavelength.',
+    rogerrabbit:  'Who Framed Roger Rabbit (LJN, 1989) — toon chaos in a real world. Signal: when two frequencies collide, the interference pattern is more interesting than either wave alone.',
+    starwars:     'Star Wars (Namco, 1987) — the Force as signal. Use the Force, Luke — trust the resonance of the universe when the targeting computer goes dark.',
     flappy:       'Flappy Bird NES Homebrew — the impossible arcade reflex test, ported to NES by fans. Signal: small margins, infinite runs.',
     invaders:     'Invaders NES Homebrew — classic space defense reimagined. Wave after wave. Signal: pattern recognition is everything.',
     nova:         'Nova the Squirrel (2019, homebrew) — full NES platformer by Raftronaut. Signal: free creative work carries its own frequency.',
@@ -446,6 +494,24 @@ const GameSpinner = (() => {
     btn.disabled = false;
     btn.querySelector('span:last-child').textContent = 'SPIN TO PLAY';
     spinning = false;
+
+    // ── Research Writer — fires on EVERY spin, no API key needed ──────────
+    if (typeof ResearchWriter !== 'undefined') {
+      ResearchWriter.autoFromSpin({
+        source:      'Game Spinner',
+        symbolId:    topGame.id,
+        symbolLabel: topGame.label,
+        gameId:      topGame.id,
+        gameLabel:   topGame.label,
+        radioTag:    topGame.radioTag,
+        radioLabel:  topGame.label,
+        matchCount,
+        coins:       0,
+        spinCount,
+        topic:       'radio',
+        title:       `Game Spin #${spinCount} — ${topGame.label}${maxCount >= 2 ? ' ×' + maxCount : ''}`,
+      });
+    }
   }
 
   // ── Launch the pending game ───────────────────────────────────────────────
