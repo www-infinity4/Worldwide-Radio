@@ -295,7 +295,7 @@ const ArcadeFlow = (() => {
   // ── Idle AI content builder ───────────────────────────────────────────────
   // Runs silently in the background, adding new challenges and lore entries.
 
-  const AI_INTERVAL_MS = 4 * 60 * 1000; // every 4 minutes when idle
+  const AI_INTERVAL_MS = 4 * 60 * 1000; // every 4 minutes when idle — adjust if too frequent
 
   function _scheduleIdleAI() {
     clearTimeout(_idleTimer);

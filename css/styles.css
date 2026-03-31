@@ -1418,6 +1418,9 @@ button.active {
 .ticker-up    { color: #06d6a0; }
 .ticker-down  { color: #ef233c; }
 
+  --ms-row-h: 84px;          /* one reel row height — change here to resize all */
+}
+
 /* ══════════════════════════════════════════════════════════════════
    MARIO SPIN — NES Cabinet Edition
 ══════════════════════════════════════════════════════════════════ */
