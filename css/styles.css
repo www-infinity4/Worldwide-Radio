@@ -3977,3 +3977,326 @@ button.active {
   .arcade-go-title { font-size: 0.85rem; }
   .aik-key         { width: 40px; height: 66px; min-height: 66px; }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   MARIO THEME — tasteful Nintendo DNA over dark premium base
+   Think: Nintendo Switch Online UI — modern, dark, NES-accented.
+   Never garish; the palette whispers Mario, it doesn't shout it.
+══════════════════════════════════════════════════════════════════ */
+
+/* ── Extended palette (added to runtime but not inside :root block) ── */
+:root {
+  --mario-red:    #c0392b;
+  --mario-red-lt: #e74c3c;
+  --mario-gold:   #ffd100;
+  --mario-sky:    #5c94fc;   /* classic NES sky blue */
+  --mario-green:  #26a65b;
+  --mario-brown:  #7a4f2e;
+  --mario-brick:  #b0552a;
+}
+
+/* ── Body — very subtle warm tint so it isn't pure cold blue ── */
+body {
+  background: #09090f;
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(192, 57, 43, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 30% at 80% 100%, rgba(92, 148, 252, 0.07) 0%, transparent 70%);
+}
+
+/* ── Nav — gold underline, coin in brand ── */
+.site-nav {
+  border-bottom-color: rgba(255, 209, 0, 0.18);
+}
+
+/* Animate the ∞ logo with a subtle gold pulse */
+.nav-logo {
+  color: var(--mario-gold);
+  text-shadow: 0 0 12px rgba(255, 209, 0, 0.5);
+  animation: logoGlow 3s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+  0%, 100% { text-shadow: 0 0 10px rgba(255, 209, 0, 0.4); }
+  50%       { text-shadow: 0 0 24px rgba(255, 209, 0, 0.8), 0 0 40px rgba(255, 209, 0, 0.3); }
+}
+
+/* ── Section pipe dividers ──────────────────────────────────────
+   A thin horizontal rule between major app-shell sections that
+   echoes the NES underground pipe color without being literal.
+─────────────────────────────────────────────────────────────── */
+.app-shell + .app-shell {
+  border-top: 1px solid rgba(38, 166, 91, 0.14);
+  position: relative;
+}
+
+.app-shell + .app-shell::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 64px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--mario-green), transparent);
+  border-radius: 1px;
+}
+
+/* ── Card accent — left border hint per section ── */
+.mario-shell .glass-card   { border-left: 3px solid var(--mario-red); }
+.vault-shell .glass-card   { border-left: 3px solid var(--mario-gold); }
+.rw-shell .glass-card      { border-left: 3px solid var(--mario-sky); }
+.crusher-section .glass-card { border-left: 3px solid var(--mario-green); }
+
+/* ── Floating coin animation ─────────────────────────────────── */
+@keyframes coinFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+/* Apply to signal coin display */
+.coin-icon {
+  animation: coinFloat 2.2s ease-in-out infinite;
+}
+
+/* ── Buttons — primary gets a Mario-red gradient ── */
+.btn-primary {
+  background: linear-gradient(135deg, var(--mario-red-lt) 0%, var(--mario-red) 100%);
+  border: none;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.4), 0 0 16px rgba(192, 57, 43, 0.25);
+  transition: filter 0.15s, transform 0.1s, box-shadow 0.1s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.12);
+  box-shadow: 0 3px 0 rgba(0,0,0,0.4), 0 0 24px rgba(192, 57, 43, 0.45);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.4);
+}
+
+/* Search / scan primary also follows */
+.search-btn, .scan-btn {
+  background: linear-gradient(135deg, var(--mario-red-lt) 0%, var(--mario-red) 100%);
+}
+
+/* ── Now-playing card gold top border ── */
+.now-playing {
+  border-top: 2px solid var(--mario-gold);
+}
+
+/* ── Station items — active/playing state Mario-green ── */
+.station-item.playing {
+  border-left-color: var(--mario-green);
+  background: rgba(38, 166, 91, 0.07);
+}
+
+/* ── Profile button — coin style ── */
+.profile-btn {
+  background: linear-gradient(135deg, var(--mario-gold) 0%, #e6a800 100%);
+  color: #111;
+  border: none;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.35), 0 0 12px rgba(255,209,0,0.25);
+  font-weight: 800;
+  border-radius: 50%;
+}
+
+.profile-btn:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.35), 0 0 22px rgba(255,209,0,0.5);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LOGIN GATE
+══════════════════════════════════════════════════════════════════ */
+
+.login-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(9, 9, 15, 0.96);
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.login-gate--in  { opacity: 1; }
+.login-gate--out { opacity: 0; pointer-events: none; }
+
+/* The card */
+.login-box {
+  width: 100%;
+  max-width: 380px;
+  padding: 2rem 1.75rem 1.75rem;
+  border: 2px solid var(--mario-gold);
+  box-shadow:
+    0 0 0 6px var(--mario-red),
+    0 0 0 8px var(--mario-gold),
+    0 24px 80px rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(255,255,255,0.06) inset;
+  text-align: center;
+  position: relative;
+}
+
+/* Floating coins row */
+.login-coins {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.lc-coin {
+  font-size: 1.6rem;
+  animation: coinFloat 2s ease-in-out infinite;
+}
+.lc-coin--2 { animation-delay: 0.35s; animation-duration: 2.4s; }
+.lc-coin--3 { animation-delay: 0.7s;  animation-duration: 2.1s; }
+
+/* Title */
+.login-title {
+  font-family: var(--font-nes);
+  font-size: 0.85rem;
+  color: var(--mario-gold);
+  text-shadow: 2px 2px 0 var(--mario-red);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+
+.login-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-bottom: 1.25rem;
+}
+
+/* Error */
+.login-error {
+  font-size: 0.78rem;
+  color: var(--danger);
+  background: rgba(255, 71, 87, 0.1);
+  border: 1px solid rgba(255, 71, 87, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.75rem;
+  margin-bottom: 0.85rem;
+  text-align: left;
+}
+
+.login-error.shake {
+  animation: loginShake 0.35s ease;
+}
+
+@keyframes loginShake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-5px); }
+  60%       { transform: translateX(5px); }
+  80%       { transform: translateX(-3px); }
+}
+
+/* Form */
+.login-form {
+  text-align: left;
+}
+
+.login-field {
+  margin-bottom: 0.85rem;
+}
+
+.login-label {
+  display: block;
+  font-size: 0.68rem;
+  font-family: var(--font-nes);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.3rem;
+}
+
+.login-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: 0.65rem 0.85rem;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-height: 48px;
+}
+
+.login-input:focus {
+  border-color: var(--mario-gold);
+  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.2);
+}
+
+.login-input::placeholder { color: var(--text-muted); }
+
+/* Submit button — NES red 3D press */
+.login-btn {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(180deg, var(--mario-red-lt) 0%, var(--mario-red) 60%, #8b0000 100%);
+  color: #fff;
+  border: 2px solid var(--mario-gold);
+  border-radius: 8px;
+  font-family: var(--font-nes);
+  font-size: 0.62rem;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  box-shadow: 0 6px 0 #600, 0 8px 20px rgba(0,0,0,0.5);
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.15s;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+  margin-bottom: 1rem;
+  min-height: 52px;
+}
+
+.login-btn:hover:not(:disabled) {
+  filter: brightness(1.12);
+  box-shadow: 0 6px 0 #600, 0 8px 30px rgba(0,0,0,0.6);
+}
+
+.login-btn:active:not(:disabled) {
+  transform: translateY(5px);
+  box-shadow: 0 1px 0 #600;
+}
+
+.login-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Toggle row */
+.login-toggle-row {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.login-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--mario-sky);
+  font-size: 0.75rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  min-height: 32px;
+}
+
+.login-toggle-btn:hover { color: var(--accent); }
+
+/* Android-sized inputs — already 48px min-height so this is fine */
+@media (max-width: 480px) {
+  .login-box      { padding: 1.5rem 1.25rem; }
+  .login-title    { font-size: 0.7rem; }
+  .login-coins    { gap: 1rem; }
+  .lc-coin        { font-size: 1.3rem; }
+}
