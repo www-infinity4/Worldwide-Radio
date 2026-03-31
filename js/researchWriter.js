@@ -138,23 +138,156 @@ Keep the tone curious, grounded, and non-preachy. Max 450 words unless asked for
     return data.choices?.[0]?.message?.content || '';
   }
 
+  // ── Template-based research generation (no API key required) ─────────────
+
+  // Pre-written signal research templates — rotated on each spin.
+  const _SIGNAL_TEMPLATES = [
+    (d) => `**Resonance Lock — ${d.title}**
+
+Like a radio telescope locking onto a distant pulsar, this spin collapsed a probability wave into a single outcome. The universe doesn't flip coins — it resolves superpositions.
+
+**Signal Reading:** ${d.context}
+
+**Core Principle:** Every slot reel is a quantum register. Before it stops, all outcomes exist simultaneously. The moment of landing is the moment of observation — wavefunction collapse in real time.
+
+**Signal Application:** This result maps directly to the ${d.channel || 'Signal Coin'} frequency domain. Radio stations operating at this band exhibit maximum coherence during synchronized spin events.
+
+**Open Questions:**
+- Does the sequence of symbols encode a hidden hash signature unique to this session?
+- Can reel-stop timing be used as a hardware entropy source for Signal Coin minting?
+- What is the Fourier transform of five simultaneous reel-stop events?`,
+
+    (d) => `**Frequency Alignment — ${d.title}**
+
+A tuning fork doesn't create sound — it reveals a frequency that was already present in the air. This spin is a tuning fork for the ${d.channel || 'radio'} band.
+
+**Signal Reading:** ${d.context}
+
+**Physics Layer:** The reel pool is a weighted probability distribution — identical to spectral line weights in atomic emission. The most likely symbol is the brightest line; the rarest is the faint ultraviolet edge nobody sees coming.
+
+**Signal Application:** Signal Coin's nuclear fingerprint operates on the same principle — radium decay produces alpha particles at statistically predictable rates, yet each individual decay is perfectly random. Pattern without prediction.
+
+**Open Questions:**
+- Is there a resonant frequency at which this exact symbol combination becomes more probable?
+- How does the Gold plasmonic enhancement layer of Signal Coin amplify low-frequency spin signals?
+- Could a Tesla coil tuned to the winning symbol's radio frequency reproduce this outcome?`,
+
+    (d) => `**Entropy Cascade — ${d.title}**
+
+Entropy always increases — except inside a well-designed system where information is the counterforce. This spin adds a data point to the session's entropy ledger.
+
+**Signal Reading:** ${d.context}
+
+**Quantum Layer:** Schrödinger's reel: until the animation stops, every symbol is simultaneously possible. The brain resolves the superposition before the DOM does — that half-second of anticipation is genuine quantum cognition.
+
+**Signal Application:** The Bitcoin block hash feeds entropy into the scanner's channel selector via the same principle — 256 bits of irreversible, unrepeatable randomness become a single radio frequency. This spin extends that chain.
+
+**Open Questions:**
+- If you logged every spin result for 24 hours, would the distribution reveal a signal bias?
+- Does screen refresh rate (60Hz vs 120Hz) affect the perceived moment of wavefunction collapse?
+- Can the coin value earned this spin be expressed as a voltage in millivolts on a 5V reference rail?`,
+
+    (d) => `**Signal Coin Activation — ${d.title}**
+
+The Signal Coin carries a nuclear heartbeat — radium atoms ticking out an alpha-decay signature no forger can copy. Each spin is one more tick in that heartbeat.
+
+**Signal Reading:** ${d.context}
+
+**Nuclear Layer:** Alpha decay is deterministic at the population level, random at the individual atom level. A million radium atoms decay in a known half-life; any single atom decays whenever it chooses. This spin chose its moment freely — just like that atom.
+
+**Signal Application:** The ${d.channel || 'radio'} channel locked by this result carries a carrier frequency that harmonizes with the gold's surface plasmon resonance. Tune an SDR to that band and you're listening to the coin's electromagnetic aura.
+
+**Open Questions:**
+- What is the decay chain from radium-226 to lead-206, and how many alpha particles does it emit?
+- Can the alpha particle energy (4.87 MeV for Ra-226) be modeled as an audio frequency?
+- Does the Signal Coin's blockchain hash encode any of today's spin results?`,
+
+    (d) => `**Tesla Field Resonance — ${d.title}**
+
+Nikola Tesla understood that the Earth itself is a resonant cavity — 7.83 Hz, the Schumann resonance, the planet's own heartbeat. Every radio signal is a ripple on that ocean.
+
+**Signal Reading:** ${d.context}
+
+**EM Layer:** A quarter-wave rod antenna at the ${d.channel || 'signal'} frequency acts like a tuning fork for the ionosphere. The signal doesn't travel through space — it travels along the surface of a conductive sphere 40,000 km in circumference. This spin is a node on that wave.
+
+**Signal Application:** Wardenclyffe Tower was designed to pump energy into this same resonant cavity. The difference between Tesla's dream and modern radio is merely efficiency — he wanted to power the world; we settle for streaming audio. This scanner does both simultaneously.
+
+**Open Questions:**
+- At what tower height does a Wardenclyffe-style resonator achieve maximum coupling to the ionosphere?
+- Does the 7.83 Hz Schumann resonance create measurable interference in SDR recordings at 40m band?
+- Could the Signal Coin's gold layer act as a plasmonic antenna for Schumann frequencies?`,
+  ];
+
+  // Generate a rich research body from spin data — NO API KEY NEEDED.
+  function _generateFallback(spinData) {
+    const idx      = Math.floor(Math.random() * _SIGNAL_TEMPLATES.length);
+    const template = _SIGNAL_TEMPLATES[idx];
+    return template({
+      title:   spinData.title   || 'Spin Event',
+      context: spinData.context || spinData.body || '',
+      channel: spinData.channel || '',
+    });
+  }
+
+  // Always saves a research entry on every spin — works with or without an API key.
+  // Uses SignalDictionary for rich arXiv-style output. If an AI key is present,
+  // upgrades the entry with AI content in the background.
+  function autoFromSpin(spinData) {
+    if (!spinData) return;
+
+    // Use SignalDictionary if available (always is — no API needed)
+    let body, title, topic;
+    if (typeof SignalDictionary !== 'undefined') {
+      const result = SignalDictionary.generate(spinData);
+      body  = result.body;
+      title = result.title;
+      topic = result.topic;
+    } else {
+      body  = _generateFallback(spinData);
+      title = spinData.title || 'Spin Research';
+      topic = spinData.topic || 'signal';
+    }
+
+    const doc = newDoc(topic, title, body);
+    saveDoc(doc);
+    _refreshList();
+
+    // If an AI key is configured, silently upgrade the saved doc with AI content
+    if (spinData.prompt) {
+      const apiKey = typeof AIAssistant !== 'undefined' ? AIAssistant.getApiKey() : null;
+      if (apiKey) {
+        generateWithAI(spinData.prompt, topic)
+          .then((aiBody) => {
+            if (aiBody && aiBody.trim()) {
+              doc.body = aiBody;
+              saveDoc(doc);
+              _refreshList();
+            }
+          })
+          .catch(() => {});
+      }
+    }
+  }
+
   // Auto-generate a research doc from a Bitcoin Crusher spin result.
-  // Called by app.js after each crush.
+  // Called by app.js after each crush. Always produces output — no API key needed.
   async function autoFromCrush(blockData) {
     if (!blockData) return;
-    const prompt = `Bitcoin block ${blockData.height || '?'} with hash prefix "${(blockData.hash || '').slice(0,16)}…"
-Difficulty: ${blockData.difficulty || 'unknown'}. Mined at ${blockData.time ? new Date(blockData.time * 1000).toUTCString() : 'unknown'}.
-Write a Signal Coin / quantum research entry that uses this block as a metaphor for a natural cryptographic process found in physics.`;
 
-    try {
-      const body  = await generateWithAI(prompt, 'signal');
-      const title = `Block ${blockData.height || '?'} — Signal Research`;
-      const doc   = newDoc('signal', title, body);
-      saveDoc(doc);
-      _refreshList();
-    } catch (_) {
-      // Silent fail — AI key may not be set
-    }
+    autoFromSpin({
+      source:      'Bitcoin Crusher',
+      symbolId:    blockData.channel || 'coin',
+      symbolLabel: blockData.channelLabel || `Block ${blockData.height || '?'}`,
+      radioLabel:  blockData.channelLabel || '',
+      radioTag:    blockData.channel || '',
+      coins:       0,
+      spinCount:   blockData.height || 0,
+      topic:       'signal',
+      title:       `Block ${blockData.height || '?'} — Signal Research`,
+      prompt:      `Bitcoin block ${blockData.height || '?'} with hash prefix "${(blockData.hash || '').slice(0,16)}…"
+Difficulty: ${blockData.difficulty || 'unknown'}. Mined at ${blockData.time ? new Date(blockData.time * 1000).toUTCString() : 'unknown'}.
+Write a Signal Coin / quantum research entry that uses this block as a metaphor for a natural cryptographic process found in physics.`,
+    });
   }
 
   // ── Render ────────────────────────────────────────────────────────────────
@@ -442,6 +575,7 @@ ${docs.map((d) => `<div class="doc">
   return {
     render,
     autoFromCrush,
+    autoFromSpin,
     getDocs,
     saveDoc,
     deleteDoc,
