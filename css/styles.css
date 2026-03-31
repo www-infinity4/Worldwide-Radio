@@ -4300,3 +4300,338 @@ body {
   .login-coins    { gap: 1rem; }
   .lc-coin        { font-size: 1.3rem; }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   PIANO MINT — keyboard + AI tune recognition
+══════════════════════════════════════════════════════════════════ */
+
+.piano-shell { padding-top: 0; }
+
+.pm-card {
+  padding: 0;
+  overflow: hidden;
+  border-color: rgba(255, 209, 0, 0.3);
+  position: relative;
+}
+
+/* Gold top stripe */
+.pm-card::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg,
+    transparent, var(--mario-gold) 20%, var(--mario-red) 50%, var(--mario-gold) 80%, transparent);
+}
+
+.pm-header {
+  padding: 1rem 1.3rem 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--glass-border);
+  flex-wrap: wrap;
+}
+
+.pm-title {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pm-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 0.1rem;
+}
+
+.pm-clear-btn { font-size: 0.78rem; }
+
+/* ── Live status row ── */
+.pm-status-row {
+  padding: 0.65rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  border-bottom: 1px solid var(--glass-border);
+  min-height: 56px;
+}
+
+.pm-notes-played {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  min-height: 22px;
+}
+
+.pm-note-bubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text);
+  animation: notePop 0.15s ease;
+}
+
+.pm-note-bubble--black {
+  background: rgba(192, 57, 43, 0.25);
+  border-color: rgba(192, 57, 43, 0.4);
+  color: #ff9f9f;
+}
+
+@keyframes notePop {
+  0%   { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+.pm-tune-status {
+  font-family: var(--font-nes);
+  font-size: 0.48rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  transition: color 0.3s;
+}
+
+/* ── Tune book ── */
+.pm-tune-book {
+  padding: 0.65rem 1.3rem;
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.pm-tune-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  padding: 0.45rem 0.65rem;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  cursor: default;
+  min-width: 120px;
+  max-width: 160px;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.pm-tune-card.discovered {
+  border-color: var(--mario-gold);
+  background: rgba(255, 209, 0, 0.08);
+}
+
+.pm-tune-card.discovered::after {
+  content: "✓";
+  position: absolute;
+  top: 4px; right: 6px;
+  font-size: 0.7rem;
+  color: var(--mario-gold);
+  font-weight: 700;
+}
+
+.pm-tune-emoji { font-size: 1rem; }
+
+.pm-tune-name {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.pm-tune-hint {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+}
+
+.pm-tune-reward {
+  font-size: 0.52rem;
+  color: #06d6a0;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* ── Keyboard shortcut legend ── */
+.pm-kbd-legend {
+  padding: 0.4rem 1.3rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.pm-kbd-item {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.pm-kbd-item kbd {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--glass-border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text);
+}
+
+/* ── Piano keyboard ── */
+.pm-keys-scroll {
+  padding: 1rem 1.3rem 1.25rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mario-gold) transparent;
+}
+
+.pm-keyboard {
+  position: relative;
+  display: inline-block;
+  /* width set by JS */
+}
+
+/* White keys layer */
+.pm-white-layer {
+  display: flex;
+  gap: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.pm-key.pm-white {
+  flex: 0 0 42px;
+  height: 128px;
+  background: linear-gradient(180deg, #f0ece2 0%, #ddd8cc 100%);
+  border: 1px solid #aaa;
+  border-top: none;
+  border-radius: 0 0 7px 7px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 6px;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.3);
+  transition: background 0.06s, box-shadow 0.06s;
+  min-height: 128px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.pm-key.pm-white:hover {
+  background: linear-gradient(180deg, #fff 0%, #ece8de 100%);
+}
+
+.pm-key.pm-white.pressed,
+.pm-key.pm-white:active {
+  background: linear-gradient(180deg, var(--mario-gold) 0%, #c8900a 100%);
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.3);
+  transform: scaleY(0.985);
+}
+
+.pm-key.pm-white.jackpot {
+  background: linear-gradient(180deg, #06d6a0 0%, #059669 100%);
+}
+
+/* Black keys layer */
+.pm-black-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  pointer-events: none;
+  /* width set by JS */
+}
+
+.pm-key.pm-black {
+  position: absolute;
+  top: 0;
+  height: 80px;
+  background: linear-gradient(180deg, #1c1c1c 0%, #080808 75%, #1a1a1a 100%);
+  border: 1px solid #000;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 5px;
+  box-shadow: 2px 4px 0 rgba(0,0,0,0.7), inset 0 -3px 0 rgba(255,255,255,0.06);
+  pointer-events: all;
+  transition: background 0.06s, box-shadow 0.06s;
+  min-height: 80px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.pm-key.pm-black:hover {
+  background: linear-gradient(180deg, #2a2a2a 0%, #111 75%, #222 100%);
+}
+
+.pm-key.pm-black.pressed,
+.pm-key.pm-black:active {
+  background: linear-gradient(180deg, var(--mario-red) 0%, #7a0000 100%);
+  box-shadow: 1px 1px 0 rgba(0,0,0,0.7);
+}
+
+.pm-key.pm-black.jackpot {
+  background: linear-gradient(180deg, #7b5cfa 0%, #4a1ea0 100%);
+}
+
+/* Key labels */
+.pk-name {
+  font-family: var(--font-mono);
+  font-size: 0.42rem;
+  color: #555;
+  line-height: 1;
+  margin-bottom: 1px;
+}
+
+.pk-kbd {
+  font-family: var(--font-mono);
+  font-size: 0.46rem;
+  color: #888;
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 2px;
+  padding: 1px 3px;
+  line-height: 1;
+}
+
+.pm-key.pm-black .pk-kbd {
+  color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+}
+
+/* Mobile — shrink keys slightly */
+@media (max-width: 640px) {
+  .pm-key.pm-white {
+    flex: 0 0 32px;
+    height: 100px;
+    min-height: 100px;
+  }
+  .pm-key.pm-black {
+    height: 62px;
+    min-height: 62px;
+  }
+  .pm-tune-book { gap: 0.3rem; }
+  .pm-tune-card { min-width: 100px; }
+}

@@ -107,6 +107,11 @@
       ResearchWriter.render("rwMount");
     }
 
+    // ── Piano Mint — 2-octave keyboard + AI tune recognition ─────────────
+    if (typeof PianoMint !== "undefined") {
+      PianoMint.render("pianoMintMount");
+    }
+
     // ── Arcade Flow — slot→token→game→video→music→keyboard→slot chain ────
     if (typeof ArcadeFlow !== "undefined") {
       ArcadeFlow.init();

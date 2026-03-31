@@ -229,15 +229,15 @@ const ArcadeFlow = (() => {
   }
 
   function _openKeyboardMint() {
-    // Scroll to the piano mint section if it exists, or show inline mini-game
-    const pianoEl = document.getElementById('pianoMintMount') ||
-                    document.querySelector('.piano-mint-section');
+    // Scroll to the dedicated Piano Mint section
+    const pianoEl = document.getElementById('pianoShell') ||
+                    document.getElementById('pianoMintMount');
     if (pianoEl) {
       pianoEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      _toast('🎹 Play 5 notes to mint a token!', '#ffd166');
+      _toast('🎹 Play a tune — AI detects it — earn a token!', '#ffd166');
       return;
     }
-    // Inline fallback mini keyboard
+    // Fallback: inline mini keyboard if the section somehow isn't in DOM
     _showInlineKeyboard();
   }
 
