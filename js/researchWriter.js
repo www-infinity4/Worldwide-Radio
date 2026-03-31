@@ -251,6 +251,7 @@ Nikola Tesla understood that the Earth itself is a resonant cavity — 7.83 Hz, 
     const doc = newDoc(topic, title, body);
     saveDoc(doc);
     _refreshList();
+    renderPrintout('spinPrintoutBody');
 
     // If an AI key is configured, silently upgrade the saved doc with AI content
     if (spinData.prompt) {
@@ -262,6 +263,7 @@ Nikola Tesla understood that the Earth itself is a resonant cavity — 7.83 Hz, 
               doc.body = aiBody;
               saveDoc(doc);
               _refreshList();
+              renderPrintout('spinPrintoutBody');
             }
           })
           .catch(() => {});
@@ -570,10 +572,38 @@ ${docs.map((d) => `<div class="doc">
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
+  // ── Printout renderer — shows the latest doc as a clean read-only card ──────
+
+  function renderPrintout(bodyId) {
+    const el = document.getElementById(bodyId || 'spinPrintoutBody');
+    if (!el) return;
+    const docs = _load();
+    if (!docs.length) return;
+
+    const doc   = docs[0]; // most recent
+    const topic = TOPICS.find((t) => t.id === doc.topic) || TOPICS[TOPICS.length - 1];
+    const date  = new Date(doc.ts).toLocaleString(undefined, {
+      month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+    });
+
+    el.innerHTML = `
+      <div class="printout-topic-pill" style="color:${topic.color};border-color:${topic.color}">
+        ${_esc(topic.label)}
+      </div>
+      <h3 class="printout-title">${_esc(doc.title)}</h3>
+      <div class="printout-body-text">${_renderMarkdown(doc.body)}</div>
+      <p class="printout-meta">${date}</p>
+    `;
+
+    const section = document.getElementById('spinPrintout');
+    if (section) section.hidden = false;
+  }
+
   // ── Public API ────────────────────────────────────────────────────────────
 
   return {
     render,
+    renderPrintout,
     autoFromCrush,
     autoFromSpin,
     getDocs,
