@@ -425,6 +425,10 @@ const PianoMint = (() => {
       const status = document.getElementById('pmTuneStatus');
       if (status) { status.textContent = 'Press a key to start…'; status.style.color = ''; }
     });
+
+    // Show yesterday's nightly summary on load, then schedule future midnight prints
+    _maybeShowYesterdaySummary();
+    _scheduleMidnightSummary();
   }
 
   function _buildKeys() {
