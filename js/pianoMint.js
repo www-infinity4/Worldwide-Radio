@@ -289,6 +289,14 @@ const PianoMint = (() => {
     if (typeof LevelSystem  !== 'undefined') LevelSystem.awardXP('pair');
     if (typeof SignalValue  !== 'undefined') SignalValue.add('pianoTune', awarded * 5);
 
+    // Record for nightly summary
+    for (let i = 0; i < awarded; i++) {
+      _recordNightlyToken(tune.reward.type, tune.emoji + ' ' + tune.name);
+    }
+
+    // Show prominent on-page token card
+    _showTokenCard(tune, awarded);
+
     // Mark tune as discovered in the tune book
     _markDiscovered(tune.id);
 
@@ -417,6 +425,10 @@ const PianoMint = (() => {
       const status = document.getElementById('pmTuneStatus');
       if (status) { status.textContent = 'Press a key to start…'; status.style.color = ''; }
     });
+
+    // Show yesterday's nightly summary on load, then schedule future midnight prints
+    _maybeShowYesterdaySummary();
+    _scheduleMidnightSummary();
   }
 
   function _buildKeys() {
@@ -503,12 +515,117 @@ const PianoMint = (() => {
     }
   }
 
-  // Reposition black keys on window resize
-  window.addEventListener('resize', () => {
-    if (document.getElementById('pmWhiteLayer')) _positionBlackKeys();
-  });
+  // ── Nightly token tracking ─────────────────────────────────────────────────
+  // Tokens are counted per calendar day and summarised at midnight.
 
-  return { render, destroy, TUNES };
+  const _NIGHTLY_KEY = 'pm_nightly_tokens_v1';
+
+  function _todayKey() {
+    return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  }
+
+  function _loadNightly() {
+    try { return JSON.parse(localStorage.getItem(_NIGHTLY_KEY) || '{}'); } catch (_) { return {}; }
+  }
+
+  function _saveNightly(data) {
+    try { localStorage.setItem(_NIGHTLY_KEY, JSON.stringify(data)); } catch (_) {}
+  }
+
+  // Record a token earned right now
+  function _recordNightlyToken(type, tuneName) {
+    const data  = _loadNightly();
+    const today = _todayKey();
+    if (!data[today]) data[today] = { music: 0, video: 0, game: 0, tunes: [] };
+    data[today][type] = (data[today][type] || 0) + 1;
+    if (!data[today].tunes.includes(tuneName)) data[today].tunes.push(tuneName);
+    _saveNightly(data);
+  }
+
+  // Print the nightly summary card inside the piano mount
+  function _printNightlySummary(dateKey) {
+    const data  = _loadNightly();
+    const day   = data[dateKey];
+    if (!day) return;
+
+    const total = (day.music || 0) + (day.video || 0) + (day.game || 0);
+    if (total === 0) return;
+
+    const mount = document.getElementById('pianoMintMount');
+    if (!mount) return;
+
+    // Remove any existing nightly card
+    const old = mount.querySelector('.pm-nightly-card');
+    if (old) old.remove();
+
+    const card = document.createElement('div');
+    card.className = 'pm-nightly-card glass-card';
+    card.innerHTML = `
+      <div class="pm-nightly-header">
+        <span class="pm-nightly-icon" aria-hidden="true">🌙</span>
+        <span class="pm-nightly-title">Nightly Piano Summary — ${dateKey}</span>
+      </div>
+      <div class="pm-nightly-row">
+        <span class="pm-nightly-stat">🎵 <strong>${day.music || 0}</strong> music</span>
+        <span class="pm-nightly-stat">🎬 <strong>${day.video || 0}</strong> video</span>
+        <span class="pm-nightly-stat">🎮 <strong>${day.game  || 0}</strong> game</span>
+        <span class="pm-nightly-stat">🏆 <strong>${total}</strong> total</span>
+      </div>
+      ${day.tunes.length ? `<p class="pm-nightly-tunes">Tunes played: ${day.tunes.join(' · ')}</p>` : ''}
+    `;
+    mount.insertAdjacentElement('afterbegin', card);
+  }
+
+  // Schedule a job to run at the next midnight and print yesterday's summary
+  function _scheduleMidnightSummary() {
+    const now       = new Date();
+    const tomorrow  = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 5);
+    const msUntil   = tomorrow - now;
+
+    setTimeout(() => {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const key = yesterday.toISOString().slice(0, 10);
+      _printNightlySummary(key);
+      // Re-schedule for the following midnight
+      _scheduleMidnightSummary();
+    }, msUntil);
+  }
+
+  // On page load show yesterday's summary if there are tokens
+  function _maybeShowYesterdaySummary() {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    _printNightlySummary(yesterday.toISOString().slice(0, 10));
+  }
+
+  // Show a prominent token-earned card inside the piano mount
+  function _showTokenCard(tune, count) {
+    const mount = document.getElementById('pianoMintMount');
+    if (!mount) return;
+
+    // Remove previous card immediately so it re-animates
+    const prev = mount.querySelector('.pm-token-card');
+    if (prev) prev.remove();
+
+    const typeEmoji = tune.reward.type === 'game' ? '🎮'
+                    : tune.reward.type === 'video' ? '🎬' : '🎵';
+
+    const card = document.createElement('div');
+    card.className = 'pm-token-card glass-card';
+    card.innerHTML = `
+      <div class="pm-token-burst" aria-hidden="true">${typeEmoji}</div>
+      <div class="pm-token-label">TOKEN EARNED</div>
+      <div class="pm-token-tune">${tune.emoji} ${tune.name}</div>
+      <div class="pm-token-count">+${count} ${tune.reward.type}</div>
+    `;
+    mount.insertAdjacentElement('afterbegin', card);
+
+    // Auto-dismiss after 4 s
+    setTimeout(() => { if (card.parentNode) card.remove(); }, 4000);
+  }
+
+
 
 })();
 

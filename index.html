@@ -3,62 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Worldwide Radio Scanner – stream live radio from any country, genre, or search term. Powered by Radio Browser API, Infinity Graphics &amp; Flux Capacitor." />
-  <!-- Android / PWA chrome -->
+  <meta name="description" content="Worldwide Radio – Spin the slot, watch videos, play NES games, and read fresh research every spin." />
   <meta name="theme-color" content="#0d0f1a" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <!-- iOS / Safari -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="∞ Radio" />
-  <title>∞ Worldwide Radio · Power-Up &amp; Play</title>
+  <title>∞ Worldwide Radio · Spin · Play · Discover</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
-  <!-- ════════════════════════════════════════════════════════
-       ANIMATED CANVAS HERO (Flux Capacitor energy rings)
-  ═══════════════════════════════════════════════════════════ -->
   <canvas id="heroCanvas" aria-hidden="true"></canvas>
 
-  <!-- ════════════════════════════════════════════════════════
-       NAV BAR — hamburger + all www-infinity repo links
-  ═══════════════════════════════════════════════════════════ -->
+  <!-- ═══════════════════════ NAV ═══════════════════════ -->
   <nav class="site-nav" role="navigation" aria-label="Site navigation">
     <div class="nav-inner">
-
-      <!-- Logo / home link -->
       <a class="nav-brand" href="https://github.com/www-infinity" aria-label="www-infinity home">
         <span class="nav-logo" aria-hidden="true">∞</span>
         <span class="nav-brand-text">www-infinity</span>
       </a>
 
-      <!-- Profile avatar button -->
-      <button
-        class="profile-btn"
-        id="profileBtn"
-        aria-label="Open user profile"
-        aria-haspopup="dialog"
-        title="Set your profile"
-      >∞</button>
+      <button class="profile-btn" id="profileBtn" aria-label="Open user profile" aria-haspopup="dialog" title="Your profile">∞</button>
 
-      <!-- Hamburger toggle -->
-      <button
-        class="hamburger"
-        id="hamburger"
-        aria-label="Open navigation menu"
-        aria-expanded="false"
-        aria-controls="navMenu"
-      >
+      <button class="hamburger" id="hamburger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navMenu">
         <span></span><span></span><span></span>
       </button>
 
-      <!-- Full repo menu (static fallback; replaced dynamically by DynamicNav) -->
       <ul class="nav-menu" id="navMenu" role="list">
-
         <li class="nav-group-label">⚡ Signal &amp; Energy</li>
         <li><a href="https://github.com/www-infinity/Flux-Capacitor"          target="_blank" rel="noopener">Flux Capacitor</a></li>
         <li><a href="https://github.com/www-infinity/Worldwide-Radio"         target="_blank" rel="noopener" aria-current="page">Worldwide Radio</a></li>
@@ -75,7 +50,7 @@
         <li><a href="https://github.com/www-infinity/Bob-Segar-s-Musiverse"   target="_blank" rel="noopener">Bob Seger's Musiverse</a></li>
         <li><a href="https://github.com/www-infinity/Zelda-NES"               target="_blank" rel="noopener">Zelda NES</a></li>
         <li><a href="https://github.com/www-infinity/NES-Mario-World-Extravaganza-The-Wizard-Platform" target="_blank" rel="noopener">Mario World</a></li>
-        <li><a href="https://github.com/www-infinity4/Mario-spin"                                       target="_blank" rel="noopener">🍄 Mario Spin</a></li>
+        <li><a href="https://github.com/www-infinity4/Mario-spin"             target="_blank" rel="noopener">🍄 Mario Spin</a></li>
         <li><a href="https://github.com/www-infinity/Wizard-NES-Movie-Website-Cartoon-Movie-Theater"   target="_blank" rel="noopener">Wizard Movie Theater</a></li>
         <li><a href="https://github.com/www-infinity/Aces"                    target="_blank" rel="noopener">Aces</a></li>
 
@@ -85,31 +60,23 @@
         <li><a href="https://github.com/www-infinity/Future-Now"              target="_blank" rel="noopener">Future Now</a></li>
         <li><a href="https://github.com/www-infinity/Hydrogen-Digital-TV"     target="_blank" rel="noopener">Hydrogen Digital TV</a></li>
         <li><a href="https://github.com/www-infinity/R2D2"                    target="_blank" rel="noopener">R2D2</a></li>
-        <li><a href="https://github.com/www-infinity/Hydrhost"                target="_blank" rel="noopener">HydrHost</a></li>
 
-        <li class="nav-group-label">💰 Finance &amp; Tokens</li>
+        <li class="nav-group-label">�� Finance &amp; Tokens</li>
         <li><a href="https://github.com/www-infinity/Mint-For-Infinity"       target="_blank" rel="noopener">Mint for Infinity</a></li>
         <li><a href="https://github.com/www-infinity/Bitcoin-Crusher"         target="_blank" rel="noopener">Bitcoin Crusher</a></li>
         <li><a href="https://github.com/www-infinity/4-hash-token-system"     target="_blank" rel="noopener">4-Hash Token System</a></li>
-        <li><a href="https://github.com/www-infinity/Open-Flaw"               target="_blank" rel="noopener">Open Flaw</a></li>
 
         <li class="nav-group-label">🛠 Infrastructure</li>
         <li><a href="https://github.com/www-infinity/Unifier"                 target="_blank" rel="noopener">Unifier</a></li>
         <li><a href="https://github.com/www-infinity/Zero-Inertia"            target="_blank" rel="noopener">Zero Inertia</a></li>
-        <li><a href="https://github.com/www-infinity/No-Inertia"              target="_blank" rel="noopener">No Inertia</a></li>
         <li><a href="https://github.com/www-infinity/Spawn"                   target="_blank" rel="noopener">Spawn</a></li>
-        <li><a href="https://github.com/www-infinity/Npx-Claude-flow-"        target="_blank" rel="noopener">NPX Claude Flow</a></li>
-
       </ul>
     </div>
   </nav>
 
-  <!-- Overlay for closing hamburger menu on outside click -->
   <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
 
-  <!-- ════════════════════════════════════════════════════════
-       PAGE HERO — title + tagline over the canvas
-  ═══════════════════════════════════════════════════════════ -->
+  <!-- ═══════════════════════ HERO ═══════════════════════ -->
   <section class="hero-section" aria-labelledby="heroTitle">
     <div class="hero-content">
       <div class="hero-badge">
@@ -118,61 +85,44 @@
       </div>
       <h1 id="heroTitle" class="hero-title">
         Worldwide<br />
-        <span class="hero-title-accent">Radio Scanner</span>
+        <span class="hero-title-accent">Radio</span>
       </h1>
-      <p class="hero-sub">
-        Police · AM · FM · Talk · News · Music · Emergency<br />
-        Search any station on the planet, or scan the dial automatically.
-      </p>
-
-      <!-- Signal strength decoration -->
+      <p class="hero-sub">Spin the slot · Watch videos · Play games · Read fresh research</p>
       <div class="signal-bar" id="signalBar" aria-hidden="true">
         <span></span><span></span><span></span><span></span><span></span>
-      </div>
-
-      <!-- Powered-by badges -->
-      <div class="powered-by" aria-label="Powered by">
-        <a href="https://github.com/www-infinity/Flux-Capacitor"    target="_blank" rel="noopener" class="powered-badge flux">
-          ⚡ Flux Capacitor
-        </a>
-        <a href="https://github.com/www-infinity/Infinity-Graphics"  target="_blank" rel="noopener" class="powered-badge graphics">
-          🎨 Infinity Graphics
-        </a>
-        <a href="https://www.radio-browser.info/"                    target="_blank" rel="noopener" class="powered-badge api">
-          📡 Radio Browser API
-        </a>
       </div>
     </div>
   </section>
 
-  <!-- ════════════════════════════════════════════════════════
-       BITCOIN CRUSHER — Entropy-driven channel selector
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="app-shell" style="padding-bottom:0">
-    <div class="crusher-card glass-card" id="crusherCard" aria-labelledby="crusherTitle">
+  <!-- ═══════════════════════ MARIO SPIN ═══════════════════════ -->
+  <section class="app-shell mario-shell" id="marioShell" aria-label="Mario Spin">
+    <div id="marioSpinMount"></div>
+  </section>
 
+  <!-- ═══════════════════════ SPIN RESEARCH PRINTOUT ═══════════════════════ -->
+  <section class="app-shell printout-shell" id="spinPrintout" hidden aria-label="Spin Research">
+    <div class="glass-card printout-card">
+      <div class="printout-header">
+        <span class="printout-icon" aria-hidden="true">📄</span>
+        <h2 class="printout-heading">Research</h2>
+        <button class="printout-close btn-secondary" id="printoutClose" aria-label="Dismiss">✕</button>
+      </div>
+      <div class="printout-body" id="spinPrintoutBody"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ BITCOIN CRUSHER ═══════════════════════ -->
+  <section class="app-shell" aria-labelledby="crusherTitle">
+    <div class="crusher-card glass-card" id="crusherCard">
       <div class="crusher-header">
         <div>
           <h2 class="crusher-title" id="crusherTitle">
-            <span class="crusher-icon" aria-hidden="true">₿</span>
-            Bitcoin Crusher
+            <span class="crusher-icon" aria-hidden="true">₿</span> Bitcoin Crusher
           </h2>
-          <p class="crusher-sub">
-            Latest block hash → entropy engine → radio channel
-          </p>
+          <p class="crusher-sub">Latest block hash → entropy engine → radio channel</p>
         </div>
-        <a
-          href="https://github.com/www-infinity/Bitcoin-Crusher"
-          target="_blank"
-          rel="noopener"
-          class="powered-badge flux"
-          aria-label="Bitcoin-Crusher repo"
-        >
-          ⛓ Repo
-        </a>
       </div>
 
-      <!-- Slot-machine result display -->
       <div class="crusher-slot" id="crusherSlot" aria-live="polite" aria-atomic="true">
         <div class="slot-channel" id="slotChannel">
           <span class="slot-emoji" id="slotEmoji">🎰</span>
@@ -180,7 +130,6 @@
         </div>
       </div>
 
-      <!-- Block metadata row -->
       <div class="crusher-meta" id="crusherMeta" hidden>
         <div class="crusher-meta-item">
           <span class="crusher-meta-label">Block</span>
@@ -196,380 +145,136 @@
         </div>
       </div>
 
-      <!-- Action row -->
       <div class="crusher-actions">
-        <button class="btn-primary crusher-spin-btn" id="btnCrush" aria-label="Spin Bitcoin Crusher">
-          <span class="crush-btn-icon" aria-hidden="true">🎰</span>
-          Spin the Dial
-        </button>
-        <span class="crusher-hint" id="crusherHint">
-          Fetches the live Bitcoin block hash and uses it as entropy to pick your station genre.
-        </span>
-      </div>
-
-      <!-- Inline error for crusher only -->
-      <div class="error-msg" id="crusherError" role="alert" hidden></div>
-
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════════════════════
-       SYSTEM LAYER BAR — OS status + XP (quiet, ambient)
-  ═══════════════════════════════════════════════════════════ -->
-  <div class="sys-layer-bar" id="sysLayerBar" aria-label="System layer status">
-    <div class="sys-layer-xp-wrap">
-      <span class="sys-layer-label" id="levelBadge">sys:Boot Layer</span>
-      <div class="sys-layer-track" title="XP progress">
-        <div class="sys-layer-fill" id="levelXpBar" style="width:0%"></div>
-      </div>
-      <span class="sys-layer-xp" id="levelXpText">0 xp</span>
-    </div>
-    <span class="sys-layer-mult" id="researchMultBadge" hidden></span>
-    <span class="sys-layer-sv"   id="signalValueDisplay">⚡ 0 sv</span>
-    <span class="sys-layer-sv-total" id="signalValueTotal" hidden></span>
-    <span class="sys-layer-bug"  id="bugScanResult"    hidden></span>
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════
-       BTC TICKER — Squashed hash signal strip
-  ═══════════════════════════════════════════════════════════ -->
-  <div class="btc-ticker-wrap" aria-hidden="true">
-    <div class="btc-ticker-track" id="btcTickerTrack"><!-- populated by app.js --></div>
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════
-       MARIO SPIN — 5-reel Power-Up Slot
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="app-shell mario-shell" aria-labelledby="marioSpinTitle">
-    <div id="marioSpinMount"></div>
-  </section>
-
-  <!-- ════════════════════════════════════════════════════════
-       SIGNAL COIN — Nuclear fingerprint · 7-mode profile
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="app-shell coin-shell" aria-labelledby="coinTitle">
-    <div class="coin-card glass-card" id="coinCard">
-
-      <div class="coin-header">
-        <div>
-          <h2 class="coin-title" id="coinTitle">
-            <span class="coin-icon" aria-hidden="true">🪙</span>
-            Signal Coin
-          </h2>
-          <p class="coin-sub">Nuclear fingerprint · Gold plasmonic · 7-mode signal profile</p>
-        </div>
-        <button class="btn-secondary coin-study-btn" id="coinStudyBtn" hidden
-                aria-label="Log this coin study to research panel">
-          📝 Log Study
+        <button class="btn-crush" id="btnCrush" aria-label="Spin the Bitcoin Crusher">
+          <span class="crush-btn-icon" aria-hidden="true">🎰</span> Spin the Dial
         </button>
       </div>
 
-      <!-- Idle state -->
-      <div class="coin-idle" id="coinIdle">
-        <span class="coin-idle-icon" aria-hidden="true">🪙</span>
-        <p class="coin-idle-text">Spin the Bitcoin Crusher to generate a coin signal profile</p>
-      </div>
-
-      <!-- 7-mode bars (hidden until first spin) -->
-      <div class="coin-modes" id="coinModes" hidden aria-label="Signal modes"></div>
-
-      <!-- Coin metadata -->
-      <div class="coin-meta" id="coinMeta" hidden>
-        <div class="coin-meta-item">
-          <span class="coin-meta-label">Coin ID</span>
-          <code class="coin-meta-value" id="coinId">—</code>
-        </div>
-        <div class="coin-meta-item">
-          <span class="coin-meta-label">Composite Signal</span>
-          <span class="coin-meta-value" id="coinComposite">—</span>
-        </div>
-        <div class="coin-meta-item">
-          <span class="coin-meta-label">Dominant Mode</span>
-          <span class="coin-meta-value" id="coinDominant">—</span>
-        </div>
-      </div>
-
+      <p class="crusher-hint" id="crusherHint" hidden></p>
+      <p class="crusher-error" id="crusherError" aria-live="polite" hidden></p>
     </div>
   </section>
 
-  <!-- ════════════════════════════════════════════════════════
-       MAIN APP SHELL
-  ═══════════════════════════════════════════════════════════ -->
-  <div class="app-shell">
+  <!-- ═══════════════════════ RADIO PLAYER ═══════════════════════ -->
+  <section class="app-shell" aria-labelledby="radioTitle">
+    <div class="glass-card">
+      <h2 class="section-title" id="radioTitle">
+        <span aria-hidden="true">📻</span> Radio Scanner
+      </h2>
 
-    <!-- ── Search / Filter ──────────────────────────────────── -->
-    <section class="glass-card controls-panel" aria-label="Search and filter">
-
-      <div class="control-group">
-        <label for="searchQuery">Search by name</label>
-        <div class="search-row">
-          <input
-            type="text"
-            id="searchQuery"
-            placeholder="BBC, WNYC, Police Scanner, Jazz FM…"
-            aria-label="Search station by name"
-          />
-          <button class="btn-primary" id="btnSearch">Search</button>
-        </div>
+      <!-- Search row -->
+      <div class="search-row">
+        <input type="search" id="searchQuery" placeholder="Search stations…" aria-label="Search stations" autocomplete="off" />
+        <button class="btn-primary" id="btnSearch" aria-label="Search">Search</button>
       </div>
 
-      <div class="control-group">
-        <label for="countrySelect">Country</label>
-        <select id="countrySelect" aria-label="Browse by country">
-          <option value="">— All countries —</option>
+      <!-- Filter row -->
+      <div class="filter-row">
+        <select id="countrySelect" aria-label="Filter by country">
+          <option value="">All Countries</option>
+        </select>
+        <select id="tagSelect" aria-label="Filter by genre">
+          <option value="">All Genres</option>
+          <option value="pop">Pop</option>
+          <option value="rock">Rock</option>
+          <option value="jazz">Jazz</option>
+          <option value="classical">Classical</option>
+          <option value="news">News</option>
+          <option value="talk">Talk</option>
+          <option value="electronic">Electronic</option>
+          <option value="hip-hop">Hip-Hop</option>
+          <option value="country">Country</option>
+          <option value="chillout">Chillout</option>
         </select>
       </div>
 
-      <div class="control-group">
-        <label for="tagSelect">Genre / Type</label>
-        <select id="tagSelect" aria-label="Browse by genre or type">
-          <option value="">— All genres —</option>
-          <optgroup label="News &amp; Talk">
-            <option value="news">News</option>
-            <option value="talk">Talk</option>
-            <option value="politics">Politics</option>
-            <option value="police scanner">Police Scanner</option>
-            <option value="emergency">Emergency</option>
-          </optgroup>
-          <optgroup label="Music">
-            <option value="pop">Pop</option>
-            <option value="top 40">Top 40</option>
-            <option value="rock">Rock</option>
-            <option value="jazz">Jazz</option>
-            <option value="classical">Classical</option>
-            <option value="hip-hop">Hip-Hop</option>
-            <option value="country">Country</option>
-            <option value="electronic">Electronic</option>
-            <option value="dance">Dance</option>
-            <option value="chill">Chill</option>
-            <option value="love songs">Love Songs</option>
-            <option value="reggae">Reggae</option>
-            <option value="folk">Folk</option>
-            <option value="ambient">Ambient</option>
-            <option value="military">Military</option>
-            <option value="shortwave">Shortwave</option>
-          </optgroup>
-          <optgroup label="Format">
-            <option value="am">AM</option>
-            <option value="fm">FM</option>
-            <option value="public radio">Public Radio</option>
-            <option value="sports">Sports</option>
-            <option value="religious">Religious</option>
-          </optgroup>
-        </select>
-      </div>
-
-      <div class="control-group">
-        <label for="volume">Volume</label>
-        <div class="volume-group">
-          <span aria-hidden="true">🔈</span>
-          <input type="range" id="volume" min="0" max="100" value="80" aria-label="Volume" />
-          <span aria-hidden="true">🔊</span>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ── Transport controls ────────────────────────────────── -->
-    <div class="transport glass-card" role="toolbar" aria-label="Playback controls">
-      <button class="btn-primary"   id="btnScan">⚡ Scan</button>
-      <button class="btn-secondary" id="btnPrev">⏮ Prev</button>
-      <button class="btn-secondary" id="btnNext">Next ⏭</button>
-      <button class="btn-danger"    id="btnStop">⏹ Stop</button>
-      <div class="dwell-group">
-        <label for="dwellTime">Dwell</label>
-        <input type="range" id="dwellTime" min="3" max="30" value="6" aria-label="Seconds per station" />
-        <span id="dwellLabel" aria-live="polite">6s</span>
-      </div>
-    </div>
-
-    <!-- ── Error banner ──────────────────────────────────────── -->
-    <div class="error-msg" id="errorMsg" role="alert" aria-live="assertive" hidden></div>
-
-    <!-- ── Now Playing card ─────────────────────────────────── -->
-    <section class="now-playing glass-card" id="nowPlaying" aria-label="Now playing" hidden>
-      <div class="now-playing-top">
-        <h2 id="stationName"></h2>
-        <button class="tricorder-btn" id="tricorderBtn" title="Toggle Tricorder Mode" aria-pressed="false">
-          🖖 Tricorder
-        </button>
-      </div>
-      <div class="now-playing-meta">
-        <span id="stationTags"></span>
-        <span id="stationCountry"></span>
-        <span id="stationBitrate"></span>
-      </div>
-      <!-- Audio Visualiser -->
-      <canvas
-        id="visualiserCanvas"
-        class="visualiser-canvas"
-        aria-hidden="true"
-        aria-label="Audio frequency visualiser"
-      ></canvas>
-    </section>
-
-    <!-- Hidden audio -->
-    <audio id="audioPlayer" preload="none" aria-hidden="true"></audio>
-
-    <!-- ── Station list ─────────────────────────────────────── -->
-    <div class="list-header">
-      <h3>Stations</h3>
-      <span class="result-count" id="resultCount" aria-live="polite"></span>
-    </div>
-
-    <div class="loading" id="loading" aria-label="Loading stations">
-      <div class="spinner" aria-hidden="true"></div>
-      Loading stations…
-    </div>
-
-    <div class="station-list-wrap glass-card">
-      <ul class="station-list" id="stationList" aria-label="Station list"></ul>
-    </div>
-
-    <!-- ── BTC Harvest Feed ─────────────────────────────────── -->
-    <section class="harvest-card glass-card" id="harvestCard" aria-labelledby="harvestTitle">
-      <div class="harvest-header">
-        <div>
-          <h3 class="harvest-title" id="harvestTitle">
-            <span class="harvest-icon" aria-hidden="true">⛓</span>
-            Harvest Feed
-            <span class="harvest-sim-badge">SIM</span>
-          </h3>
-          <p class="harvest-sub">Hash squashed → frequency emitted → token logged</p>
-        </div>
-        <div class="harvest-totals" id="harvestTotals">
-          <div class="harvest-total-item">
-            <span class="harvest-total-label">Session</span>
-            <code class="harvest-total-val" id="harvestTotal">0.00000000 ₿</code>
-          </div>
-          <div class="harvest-total-item">
-            <span class="harvest-total-label">Your 8%</span>
-            <code class="harvest-total-val harvest-user" id="harvestUser">0.00000000 ₿</code>
-          </div>
-        </div>
-      </div>
-      <ul class="harvest-tx-list" id="harvestTxList" aria-label="Transaction feed"></ul>
-      <p class="harvest-disclaimer">
-        ⚠ Simulation only — all values are Math.random() display figures. No real Bitcoin is transferred.
-      </p>
-    </section>
-
-  </div><!-- /.app-shell -->
-
-  <!-- ════════════════════════════════════════════════════════
-       RESEARCH PANEL — Signal notebook
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="app-shell research-shell" aria-labelledby="researchPanelTitle">
-    <div class="research-card glass-card" id="researchCard">
-
-      <div class="research-header">
-        <div>
-          <h2 class="research-title" id="researchPanelTitle">
-            <span class="research-icon" aria-hidden="true">🔬</span>
-            Research Panel
-          </h2>
-          <p class="research-sub">Signal notebook · Log discoveries · Connect ideas</p>
-        </div>
-        <div class="research-header-actions">
-          <span class="synapse-stats" id="synapseStats" title="Memory nodes and synaptic links"></span>
-          <button class="btn-secondary" id="researchExportBtn" title="Export research log">⬇ Export</button>
-          <button class="btn-secondary" id="researchCollapseBtn" aria-expanded="true" title="Collapse panel">▲</button>
-        </div>
-      </div>
-
-      <div id="researchBody">
-
-        <!-- Topic filter pills -->
-        <div class="research-topics" id="researchTopics" role="tablist" aria-label="Topic filter"></div>
-
-        <!-- Entry form -->
-        <div class="research-form">
-          <div class="research-form-row">
-            <select class="research-topic-select" id="researchTopicSelect" aria-label="Topic"></select>
-            <input type="text" class="research-title-input" id="researchTitleInput"
-                   placeholder="Research title or question…" maxlength="120" aria-label="Title" />
-          </div>
-          <textarea class="research-notes-input" id="researchNotesInput" rows="3"
-                    placeholder="Notes, observations, signal readings, clipboard insights… (Ctrl+Enter to save)"
-                    maxlength="2000" aria-label="Notes"></textarea>
-          <div class="research-form-footer">
-            <input type="url" class="research-source-input" id="researchSourceInput"
-                   placeholder="Source URL (optional)" aria-label="Source URL" />
-            <div class="research-form-actions">
-              <button class="btn-secondary" id="researchAskAiBtn">🤖 Ask AI</button>
-              <button class="btn-primary"   id="researchLogBtn">+ Log Entry</button>
+      <!-- Now playing -->
+      <section class="now-playing" id="nowPlaying" hidden aria-label="Now playing">
+        <div class="np-info">
+          <div class="np-dot" aria-hidden="true"></div>
+          <div>
+            <div class="station-name" id="stationName"></div>
+            <div class="station-meta">
+              <span id="stationTags"></span>
+              <span id="stationCountry"></span>
+              <span id="stationBitrate"></span>
             </div>
           </div>
         </div>
+        <canvas id="visualiserCanvas" class="visualiser-canvas" aria-hidden="true" aria-label="Audio frequency visualiser"></canvas>
+      </section>
 
-        <!-- List header -->
-        <div class="research-list-header">
-          <span class="research-count" id="researchCount" aria-live="polite">0 entries</span>
-          <button class="btn-danger" id="researchClearBtn"
-                  style="font-size:0.72rem;padding:0.2rem 0.55rem">🗑 Clear</button>
-        </div>
+      <audio id="audioPlayer" preload="none" aria-hidden="true"></audio>
 
-        <!-- Entries -->
-        <div class="research-list-wrap">
-          <ul class="research-list" id="researchList" aria-label="Research entries"></ul>
-          <p class="research-empty" id="researchEmpty">
-            No entries yet. Log your first signal observation above.
-          </p>
-        </div>
+      <!-- Playback controls -->
+      <div class="controls">
+        <button class="btn-secondary ctrl-btn" id="btnPrev"  aria-label="Previous station">⏮</button>
+        <button class="btn-primary  ctrl-btn" id="btnScan"  aria-label="Start scanning">⏯ Scan</button>
+        <button class="btn-secondary ctrl-btn" id="btnNext"  aria-label="Next station">⏭</button>
+        <button class="btn-secondary ctrl-btn" id="btnStop"  aria-label="Stop">⏹</button>
+      </div>
 
+      <!-- Dwell + Volume -->
+      <div class="slider-row">
+        <label class="slider-label" for="dwellTime">
+          Scan speed: <span id="dwellLabel">6s</span>
+        </label>
+        <input type="range" id="dwellTime" class="range-input" min="2" max="30" value="6" aria-label="Scan dwell time" />
+      </div>
+      <div class="slider-row">
+        <label class="slider-label" for="volume">Volume</label>
+        <input type="range" id="volume" class="range-input" min="0" max="100" value="80" aria-label="Volume" />
+      </div>
+
+      <!-- Error -->
+      <p class="error-msg" id="errorMsg" aria-live="polite" hidden></p>
+
+      <!-- Station list -->
+      <div class="list-header">
+        <h3>Stations</h3>
+        <span class="result-count" id="resultCount" aria-live="polite"></span>
+      </div>
+
+      <div class="loading" id="loading" aria-label="Loading stations">
+        <div class="spinner" aria-hidden="true"></div>
+        Loading stations…
+      </div>
+
+      <div class="station-list-wrap glass-card">
+        <ul class="station-list" id="stationList" aria-label="Station list"></ul>
       </div>
     </div>
   </section>
 
-  <!-- ════════════════════════════════════════════════════════
-       TOKEN VAULT — Music · Video · Games
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="app-shell vault-shell" id="vaultShell" aria-labelledby="vaultTitle">
+  <!-- ═══════════════════════ TOKEN VAULT ═══════════════════════ -->
+  <section class="app-shell vault-shell" id="vaultShell" aria-label="Token Vault">
     <div id="vaultMount"></div>
-    <!-- Warp list — session clone snapshots (⚪ Coin power) -->
     <div class="warp-shell glass-card" id="warpShell">
       <div class="warp-header">
         <span class="warp-title">⚪ Warps</span>
-        <span class="warp-sub">Session clone snapshots · land 🪙 Coin to create one</span>
+        <span class="warp-sub">Session snapshots · land 🪙 Coin to create one</span>
       </div>
       <div id="warpList" class="warp-list"></div>
     </div>
   </section>
 
-  <!-- ════════════════════════════════════════════════════════
-       GAME SPINNER — 3-reel NES cartridge slot
-       Line up 3 covers → play that game instantly · 1 token
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="app-shell game-spinner-shell" id="gameSpinnerShell"
-           aria-labelledby="gameSpinnerTitle">
+  <!-- ═══════════════════════ GAME SPINNER ═══════════════════════ -->
+  <section class="app-shell game-spinner-shell" id="gameSpinnerShell" aria-label="Game Spinner">
     <div id="gameSpinnerMount"></div>
   </section>
 
-  <!-- ════════════════════════════════════════════════════════
-       NES EMULATOR — launched by Game Spinner 3-of-a-kind
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="app-shell emu-shell" id="emuShell" hidden
-           aria-labelledby="emuTitle">
+  <!-- ═══════════════════════ NES EMULATOR ═══════════════════════ -->
+  <section class="app-shell emu-shell" id="emuShell" hidden aria-label="NES Emulator">
     <div id="emuMount"></div>
   </section>
 
-  <!-- ════════════════════════════════════════════════════════
-       RESEARCH WRITER — AI document editor
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="app-shell rw-shell" id="rwShell" aria-labelledby="rwTitle">
-    <div id="rwMount"></div>
-  </section>
-
-  <!-- ════════════════════════════════════════════════════════
-       PIANO MINT — play a real tune, AI detects it, earn a token
-  ═══════════════════════════════════════════════════════════ -->
-  <section class="app-shell piano-shell" id="pianoShell" aria-labelledby="pmTitle">
+  <!-- ═══════════════════════ PIANO MINT ═══════════════════════ -->
+  <section class="app-shell piano-shell" id="pianoShell" aria-label="Piano Mint">
     <div id="pianoMintMount"></div>
   </section>
 
-  <!-- ════════════════════════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════════════════════════ -->
+  <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
@@ -588,9 +293,7 @@
     </div>
   </footer>
 
-  <!-- ════════════════════════════════════════════════════════
-       PROFILE MODAL
-  ═══════════════════════════════════════════════════════════ -->
+  <!-- ═══════════════════════ PROFILE MODAL ═══════════════════════ -->
   <div class="modal-backdrop" id="profileModalBackdrop" hidden aria-hidden="true"></div>
   <dialog class="profile-modal glass-card" id="profileModal" aria-label="User profile" aria-modal="true">
     <div class="modal-header">
@@ -598,14 +301,13 @@
       <button class="modal-close" id="profileModalClose" aria-label="Close profile">✕</button>
     </div>
 
-    <!-- Tabs -->
     <div class="modal-tabs" role="tablist">
-      <button class="modal-tab active" role="tab" data-tab="profile" aria-selected="true">Profile</button>
-      <button class="modal-tab" role="tab" data-tab="history" aria-selected="false">History</button>
-      <button class="modal-tab" role="tab" data-tab="settings" aria-selected="false">Settings ⚙</button>
+      <button class="modal-tab active" role="tab" data-tab="profile"  aria-selected="true">Profile</button>
+      <button class="modal-tab"        role="tab" data-tab="history"  aria-selected="false">History</button>
+      <button class="modal-tab"        role="tab" data-tab="settings" aria-selected="false">Settings ⚙</button>
     </div>
 
-    <!-- Tab: Profile -->
+    <!-- Profile tab -->
     <div class="modal-panel" id="tabProfile">
       <div class="profile-avatar-row">
         <div class="profile-avatar-large" id="profileAvatarPreview">∞</div>
@@ -621,7 +323,7 @@
       </div>
     </div>
 
-    <!-- Tab: History -->
+    <!-- History tab -->
     <div class="modal-panel" id="tabHistory" hidden>
       <div class="history-section">
         <h3 class="history-title">📻 Recent Stations <span class="hist-count" id="histStationCount"></span></h3>
@@ -636,53 +338,8 @@
       </button>
     </div>
 
-    <!-- Tab: Settings -->
+    <!-- Settings tab -->
     <div class="modal-panel" id="tabSettings" hidden>
-      <label class="profile-label">AI API Key <span class="settings-hint">(optional — stored in your browser only)</span></label>
-      <input
-        type="password"
-        id="aiApiKeyInput"
-        placeholder="sk-… or any OpenAI-compatible key"
-        autocomplete="off"
-        style="width:100%;margin-bottom:0.5rem"
-      />
-      <label class="profile-label">AI Endpoint URL</label>
-      <input
-        type="url"
-        id="aiApiUrlInput"
-        placeholder="https://api.openai.com/v1/chat/completions"
-        style="width:100%;margin-bottom:0.75rem"
-      />
-      <button class="btn-primary" id="saveAiSettings" style="width:100%">Save AI Settings</button>
-      <p class="settings-hint" style="margin-top:0.75rem">
-        Your key is stored only in <code>localStorage</code> and never sent to any server other than your chosen AI endpoint.
-        Works with OpenAI, OpenRouter, Groq, or any OpenAI-compatible API.
-      </p>
-
-      <hr style="border-color:var(--glass-border);margin:1.25rem 0" />
-
-      <label class="profile-label">
-        GitHub Token (GHP)
-        <span class="settings-hint">(optional — logs each Bitcoin Crusher spin to the repo)</span>
-      </label>
-      <input
-        type="password"
-        id="ghpTokenInput"
-        placeholder="github_pat_… or ghp_…"
-        autocomplete="off"
-        style="width:100%;margin-bottom:0.5rem"
-      />
-      <button class="btn-primary" id="saveGhpToken" style="width:100%">Save GitHub Token</button>
-      <p class="settings-hint" style="margin-top:0.75rem">
-        If set, each Crusher spin writes a research entry to
-        <code>data/btc-research.json</code> in this repository via the GitHub API.
-        The token is stored only in your browser's <code>localStorage</code> and never
-        committed to source code.
-        Requires the token to have <strong>Contents: Write</strong> permission on this repo.
-      </p>
-
-      <hr style="border-color:var(--glass-border);margin:1.25rem 0" />
-
       <p class="profile-label">Account</p>
       <label class="profile-label" for="newPasswordInput" style="margin-top:0.5rem">New Password</label>
       <input type="password" id="newPasswordInput" placeholder="New password…"
@@ -699,54 +356,20 @@
     </div>
   </dialog>
 
-  <!-- ════════════════════════════════════════════════════════
-       AI CHAT PANEL (floating)
-  ═══════════════════════════════════════════════════════════ -->
-  <button class="ai-chat-toggle" id="aiChatToggle" aria-label="Open AI assistant" title="AI Radio Assistant">
-    💬
-  </button>
-
-  <div class="ai-chat-panel glass-card" id="aiChatPanel" hidden role="dialog" aria-label="AI assistant">
-    <div class="ai-chat-header">
-      <span>∞ AI Radio Assistant</span>
-      <button class="modal-close" id="aiChatClose" aria-label="Close AI chat">✕</button>
-    </div>
-    <div class="ai-chat-messages" id="aiChatMessages" aria-live="polite" aria-relevant="additions"></div>
-    <div class="ai-chat-input-row">
-      <input
-        type="text"
-        id="aiChatInput"
-        placeholder="Ask anything about the scanner…"
-        aria-label="Chat message"
-        autocomplete="off"
-      />
-      <button class="btn-primary" id="aiChatSend" aria-label="Send message">➤</button>
-    </div>
-  </div>
-
-  <!-- Toast notification container -->
+  <!-- ═══════════════════════ TOAST CONTAINER ═══════════════════════ -->
   <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="false"></div>
 
-  <!-- ════════════════════════════════════════════════════════
-       LOGIN GATE — shown on first visit / session expiry
-       Hidden immediately if a valid session is present.
-  ═══════════════════════════════════════════════════════════ -->
+  <!-- ═══════════════════════ LOGIN GATE ═══════════════════════ -->
   <div id="loginGate" class="login-gate" role="dialog" aria-modal="true" aria-label="Sign in" hidden>
     <div class="login-box glass-card">
-      <!-- Animated coin row -->
       <div class="login-coins" aria-hidden="true">
         <span class="lc-coin">🪙</span>
         <span class="lc-coin lc-coin--2">⭐</span>
         <span class="lc-coin lc-coin--3">🍄</span>
       </div>
-
       <h1 class="login-title">INSERT COIN</h1>
       <p class="login-sub" id="loginSub">Create your player profile to start</p>
-
-      <!-- Error strip -->
       <p class="login-error" id="loginError" hidden></p>
-
-      <!-- Form -->
       <div class="login-form">
         <div class="login-field">
           <label class="login-label" for="loginUsername">Player Name</label>
@@ -766,9 +389,7 @@
                  placeholder="Repeat password…" maxlength="72"
                  autocomplete="new-password" />
         </div>
-
         <button class="login-btn" id="loginSubmit">▶ START GAME</button>
-
         <p class="login-toggle-row">
           <span id="loginToggleText">Already have a profile?</span>
           <button class="login-toggle-btn" id="loginToggle">Sign in</button>
@@ -777,18 +398,13 @@
     </div>
   </div>
 
-  <!-- Scripts: login gate first, then profile → … -->
+  <!-- ═══════════════════════ SCRIPTS ═══════════════════════ -->
   <script src="js/loginGate.js"></script>
   <script src="js/userProfile.js"></script>
-  <script src="js/synapse.js"></script>
-  <script src="js/aiAssistant.js"></script>
   <script src="js/dynamicNav.js"></script>
   <script src="js/bitcoinCrusher.js"></script>
   <script src="js/radioBrowser.js"></script>
   <script src="js/visualiser.js"></script>
-  <script src="js/bitcoinResearchWriter.js"></script>
-  <script src="js/signalCoin.js"></script>
-  <script src="js/btcHarvester.js"></script>
   <script src="js/marioSpin.js"></script>
   <script src="js/chiptuneEngine.js"></script>
   <script src="js/gameEmulator.js"></script>
@@ -796,88 +412,48 @@
   <script src="js/rewardVault.js"></script>
   <script src="js/signalValue.js"></script>
   <script src="js/levelSystem.js"></script>
-  <script src="js/researchLogger.js"></script>
-  <script src="js/researchPanel.js"></script>
+  <script src="js/signalDictionary.js"></script>
   <script src="js/researchWriter.js"></script>
   <script src="js/pianoMint.js"></script>
   <script src="js/arcadeFlow.js"></script>
   <script src="js/app.js"></script>
   <script src="js/hero.js"></script>
+
   <script>
-    // ── Hamburger menu ──────────────────────────────────────────────────────
+    // ── Hamburger menu ────────────────────────────────────────────────────
     (function () {
       const btn     = document.getElementById("hamburger");
       const menu    = document.getElementById("navMenu");
       const overlay = document.getElementById("navOverlay");
 
-      function openMenu() {
-        menu.classList.add("open");
-        overlay.classList.add("visible");
-        btn.setAttribute("aria-expanded", "true");
-        btn.classList.add("open");
-      }
-      function closeMenu() {
-        menu.classList.remove("open");
-        overlay.classList.remove("visible");
-        btn.setAttribute("aria-expanded", "false");
-        btn.classList.remove("open");
-      }
+      function openMenu()  { menu.classList.add("open"); overlay.classList.add("visible"); btn.setAttribute("aria-expanded", "true");  btn.classList.add("open"); }
+      function closeMenu() { menu.classList.remove("open"); overlay.classList.remove("visible"); btn.setAttribute("aria-expanded", "false"); btn.classList.remove("open"); }
 
-      btn.addEventListener("click", () =>
-        menu.classList.contains("open") ? closeMenu() : openMenu()
-      );
+      btn.addEventListener("click", () => menu.classList.contains("open") ? closeMenu() : openMenu());
       overlay.addEventListener("click", closeMenu);
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") { closeMenu(); closeProfile(); }
-      });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeMenu(); if (typeof closeProfile === "function") closeProfile(); } });
     })();
 
-    // ── Profile modal ───────────────────────────────────────────────────────
+    // ── Profile modal ─────────────────────────────────────────────────────
     (function () {
-      const profileBtn     = document.getElementById("profileBtn");
-      const modal          = document.getElementById("profileModal");
-      const backdrop       = document.getElementById("profileModalBackdrop");
-      const closeBtn       = document.getElementById("profileModalClose");
-      const saveNameBtn    = document.getElementById("profileSaveName");
-      const clearHistBtn   = document.getElementById("profileClearHistory");
-      const saveAiBtn      = document.getElementById("saveAiSettings");
-      const saveGhpBtn     = document.getElementById("saveGhpToken");
-      const tabs           = document.querySelectorAll(".modal-tab");
-      const panels         = document.querySelectorAll(".modal-panel");
+      const profileBtn  = document.getElementById("profileBtn");
+      const modal       = document.getElementById("profileModal");
+      const backdrop    = document.getElementById("profileModalBackdrop");
+      const closeBtn    = document.getElementById("profileModalClose");
+      const saveNameBtn = document.getElementById("profileSaveName");
+      const clearHistBtn= document.getElementById("profileClearHistory");
+      const tabs        = document.querySelectorAll(".modal-tab");
+      const panels      = document.querySelectorAll(".modal-panel");
 
       function openProfile() {
         UserProfile.renderModal();
-
-        // Pre-fill AI settings — leave key input blank if set (type=password hides it anyway)
-        document.getElementById("aiApiKeyInput").value = "";
-        document.getElementById("aiApiKeyInput").placeholder = AIAssistant.getApiKey()
-          ? "Key saved — paste a new one to update"
-          : "sk-… or any OpenAI-compatible key";
-        document.getElementById("aiApiUrlInput").value = AIAssistant.getApiUrl();
-
-        // Pre-fill GHP token placeholder
-        const ghpInput = document.getElementById("ghpTokenInput");
-        if (ghpInput && typeof BitcoinResearchWriter !== "undefined") {
-          ghpInput.value = "";
-          ghpInput.placeholder = BitcoinResearchWriter.getToken()
-            ? "Token saved — paste a new one to update"
-            : "github_pat_… or ghp_…";
-        }
-
-        // Show history counts
-        const p = UserProfile.get();
+        const p  = UserProfile.get();
         const sc = document.getElementById("histStationCount");
         const cc = document.getElementById("histCrushCount");
         if (sc) sc.textContent = `(${p.scanHistory.length})`;
         if (cc) cc.textContent = `(${p.crushHistory.length})`;
-
-        // Update large avatar preview
         const preview = document.getElementById("profileAvatarPreview");
-        if (preview) {
-          preview.textContent   = p.name ? p.name[0].toUpperCase() : "∞";
-          preview.style.background = p.avatarColour;
-        }
-
+        if (preview) { preview.textContent = p.name ? p.name[0].toUpperCase() : "∞"; preview.style.background = p.avatarColour; }
         backdrop.hidden = false;
         backdrop.removeAttribute("aria-hidden");
         modal.showModal ? modal.showModal() : (modal.hidden = false);
@@ -894,7 +470,6 @@
       backdrop.addEventListener("click", closeProfile);
       closeBtn.addEventListener("click", closeProfile);
 
-      // Tab switching
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
           tabs.forEach((t) => { t.classList.remove("active"); t.setAttribute("aria-selected", "false"); });
@@ -902,24 +477,19 @@
           tab.classList.add("active");
           tab.setAttribute("aria-selected", "true");
           const target = document.getElementById("tab" + tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1));
-          if (target) { target.hidden = false; }
-          // Re-render history panel on switch
+          if (target) target.hidden = false;
           if (tab.dataset.tab === "history") UserProfile.renderModal();
         });
       });
 
-      // Save name
       saveNameBtn.addEventListener("click", () => {
         const val = document.getElementById("profileNameInput").value;
         UserProfile.setName(val);
+        const p = UserProfile.get();
         const preview = document.getElementById("profileAvatarPreview");
-        if (preview) {
-          const p = UserProfile.get();
-          preview.textContent = p.name ? p.name[0].toUpperCase() : "∞";
-        }
+        if (preview) preview.textContent = p.name ? p.name[0].toUpperCase() : "∞";
       });
 
-      // Clear history
       clearHistBtn.addEventListener("click", () => {
         if (confirm("Clear all scan, crusher, and chat history?")) {
           UserProfile.clearHistory();
@@ -927,41 +497,6 @@
         }
       });
 
-      // Save AI settings
-      saveAiBtn.addEventListener("click", () => {
-        const keyInput = document.getElementById("aiApiKeyInput").value.trim();
-        const urlInput = document.getElementById("aiApiUrlInput").value.trim();
-        // Only overwrite key if the user actually typed a new value
-        if (keyInput) AIAssistant.setApiKey(keyInput);
-        if (urlInput) AIAssistant.setApiUrl(urlInput);
-        const savedMsg = document.createElement("p");
-        savedMsg.textContent = "✓ Saved";
-        savedMsg.style.cssText = "color:var(--accent);font-size:0.85rem;margin-top:0.4rem";
-        saveAiBtn.after(savedMsg);
-        setTimeout(() => savedMsg.remove(), 2000);
-      });
-
-      // Save GHP token
-      if (saveGhpBtn) {
-        saveGhpBtn.addEventListener("click", () => {
-          const ghpInput = document.getElementById("ghpTokenInput");
-          if (ghpInput && typeof BitcoinResearchWriter !== "undefined") {
-            const token = ghpInput.value.trim();
-            if (token) BitcoinResearchWriter.setToken(token);
-            ghpInput.value = "";
-            ghpInput.placeholder = token
-              ? "Token saved — paste a new one to update"
-              : ghpInput.placeholder;
-            const savedMsg = document.createElement("p");
-            savedMsg.textContent = token ? "✓ GitHub token saved" : "✓ Token cleared";
-            savedMsg.style.cssText = "color:var(--accent);font-size:0.85rem;margin-top:0.4rem";
-            saveGhpBtn.after(savedMsg);
-            setTimeout(() => savedMsg.remove(), 2000);
-          }
-        });
-      }
-
-      // Change Password
       const changePwBtn = document.getElementById("changePasswordBtn");
       if (changePwBtn && typeof LoginGate !== "undefined") {
         changePwBtn.addEventListener("click", async () => {
@@ -981,23 +516,22 @@
         });
       }
 
-      // Sign Out
       const signOutBtn = document.getElementById("signOutBtn");
       if (signOutBtn && typeof LoginGate !== "undefined") {
-        signOutBtn.addEventListener("click", () => {
-          closeProfile();
-          LoginGate.signOut();
+        signOutBtn.addEventListener("click", () => { closeProfile(); LoginGate.signOut(); });
+      }
+
+      // Printout dismiss
+      const printoutClose = document.getElementById("printoutClose");
+      if (printoutClose) {
+        printoutClose.addEventListener("click", () => {
+          document.getElementById("spinPrintout").hidden = true;
         });
       }
 
-      // Boot: render avatar
       UserProfile.renderNavAvatar();
     })();
 
-    // ── AI chat ─────────────────────────────────────────────────────────────
-    AIAssistant.initUI();
-
-    // ── Dynamic nav ──────────────────────────────────────────────────────────
     DynamicNav.init();
   </script>
 </body>

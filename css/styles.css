@@ -4635,3 +4635,191 @@ body {
   .pm-tune-book { gap: 0.3rem; }
   .pm-tune-card { min-width: 100px; }
 }
+
+/* ════════════════════════════════════════════════════════
+   SPIN RESEARCH PRINTOUT CARD
+   Shown automatically after every Mario Spin / BTC Crush
+════════════════════════════════════════════════════════ */
+.printout-shell { padding-top: 0; }
+
+.printout-card {
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+
+.printout-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.printout-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.printout-heading {
+  flex: 1;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.printout-close {
+  margin-left: auto;
+  font-size: 0.78rem;
+  padding: 0.25rem 0.6rem;
+}
+
+.printout-topic-pill {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border: 1px solid currentColor;
+  border-radius: 99px;
+  padding: 0.15rem 0.6rem;
+  margin-bottom: 0.55rem;
+  opacity: 0.9;
+}
+
+.printout-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 0.75rem;
+  line-height: 1.3;
+}
+
+.printout-body-text {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--text-secondary, #c0c8d8);
+}
+
+.printout-body-text p { margin: 0 0 0.6rem; }
+.printout-body-text h2 { font-size: 0.9rem; font-weight: 700; margin: 0.85rem 0 0.3rem; color: var(--accent); }
+.printout-body-text strong { color: var(--text); }
+.printout-body-text em { color: var(--accent); font-style: normal; }
+.printout-body-text blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 0.75rem;
+  margin: 0.5rem 0;
+  color: var(--text-secondary, #c0c8d8);
+  font-style: italic;
+}
+
+.printout-meta {
+  font-size: 0.7rem;
+  color: var(--text-muted, #6b7280);
+  margin: 0.75rem 0 0;
+}
+
+/* ════════════════════════════════════════════════════════
+   PIANO MINT — PER-SONG TOKEN CARD
+   Pops up inside the piano section after a melody is detected
+════════════════════════════════════════════════════════ */
+.pm-token-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 1.1rem 1.5rem 1.25rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  border: 2px solid var(--gold, #ffd166);
+  animation: pm-token-pop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes pm-token-pop {
+  from { opacity: 0; transform: scale(0.7) translateY(-12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.pm-token-burst {
+  font-size: 2.4rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px var(--gold, #ffd166));
+  animation: pm-token-spin 0.6s ease-out;
+}
+
+@keyframes pm-token-spin {
+  from { transform: rotate(-20deg) scale(1.4); }
+  to   { transform: rotate(0deg) scale(1); }
+}
+
+.pm-token-label {
+  font-family: var(--font-pixel, 'Press Start 2P', monospace);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: var(--gold, #ffd166);
+  text-transform: uppercase;
+}
+
+.pm-token-tune {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.pm-token-count {
+  font-family: var(--font-pixel, 'Press Start 2P', monospace);
+  font-size: 0.7rem;
+  color: var(--accent, #00d4ff);
+  letter-spacing: 0.06em;
+}
+
+/* ════════════════════════════════════════════════════════
+   PIANO MINT — NIGHTLY SUMMARY CARD
+   Printed at midnight (and on page load from yesterday)
+════════════════════════════════════════════════════════ */
+.pm-nightly-card {
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1.5px solid rgba(120, 100, 220, 0.55);
+  background: rgba(60, 40, 120, 0.18);
+}
+
+.pm-nightly-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.pm-nightly-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.pm-nightly-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.pm-nightly-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.45rem;
+}
+
+.pm-nightly-stat {
+  font-size: 0.82rem;
+  color: var(--text-secondary, #c0c8d8);
+}
+
+.pm-nightly-stat strong {
+  color: var(--gold, #ffd166);
+  font-weight: 700;
+}
+
+.pm-nightly-tunes {
+  font-size: 0.72rem;
+  color: var(--text-muted, #6b7280);
+  margin: 0;
+  line-height: 1.5;
+}
