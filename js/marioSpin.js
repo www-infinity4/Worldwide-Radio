@@ -193,8 +193,6 @@ const MarioSpin = (() => {
       if (r) r.classList.remove('ms-reel--win');
     });
 
-
-
     // Determine final payline symbols (one per reel)
     const finals = [0,1,2,3,4].map(() => _rand());
 

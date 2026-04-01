@@ -204,8 +204,7 @@ const RewardVault = (() => {
     if (matchCount >= 5) {
       // JACKPOT — video + game (no music/chiptune)
       s.video += 2; s.game += 2;
-      _log('game',  `Jackpot! ${symbolLabel} ×5`);
-      _log('video', `Jackpot! ${symbolLabel} ×5`);
+      _log('all', `Jackpot! ${symbolLabel} ×5 — +2 video +2 game`);
       openTab = 'video';
     } else if (matchCount === 4) {
       s.game += 2;

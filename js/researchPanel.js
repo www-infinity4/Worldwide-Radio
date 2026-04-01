@@ -202,43 +202,6 @@ const ResearchPanel = (() => {
     if (!currentTopic || currentTopic === 'signal') renderList();
   }
 
-  // ── Research Terms — unlocks extra daily token quota ─────────────────────
-
-  function _submitResearchTerms() {
-    const input = document.getElementById('researchTermsInput');
-    const terms = input ? input.value.trim() : '';
-    if (!terms || terms.split(/\s+/).length < 2) {
-      if (input) {
-        input.style.borderColor = 'var(--danger)';
-        setTimeout(() => { input.style.borderColor = ''; }, 1500);
-        input.focus();
-      }
-      return;
-    }
-
-    // Log the research terms as a research entry
-    ResearchLogger.log({
-      topic: 'note',
-      title: 'Research Terms',
-      notes: terms,
-    });
-    if (input) input.value = '';
-
-    // Unlock extra daily tokens via RewardVault
-    if (typeof RewardVault !== 'undefined') {
-      RewardVault.unlockResearchBonus();
-    }
-
-    const status = document.getElementById('researchTermsStatus');
-    if (status) {
-      status.textContent = '✓ Research terms saved — extended token quota unlocked for today!';
-      status.hidden = false;
-      setTimeout(() => { status.hidden = true; }, 4000);
-    }
-
-    if (!currentTopic || currentTopic === 'note') renderList();
-  }
-
   // ── Init ──────────────────────────────────────────────────────────────────
 
   function init() {
@@ -274,15 +237,6 @@ const ResearchPanel = (() => {
 
     notesInput && notesInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); _log(); }
-    });
-
-    // Wire research terms submit
-    const termsBtn = document.getElementById('researchTermsBtn');
-    termsBtn && termsBtn.addEventListener('click', _submitResearchTerms);
-
-    const termsInput = document.getElementById('researchTermsInput');
-    termsInput && termsInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); _submitResearchTerms(); }
     });
   }
 
