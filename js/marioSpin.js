@@ -193,7 +193,7 @@ const MarioSpin = (() => {
       if (r) r.classList.remove('ms-reel--win');
     });
 
-    if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('spin');
+
 
     // Determine final payline symbols (one per reel)
     const finals = [0,1,2,3,4].map(() => _rand());
@@ -243,32 +243,28 @@ const MarioSpin = (() => {
 
     if (maxCount === 5) {
       coins = topSym.value * 50;
-      label = `🌟 JACKPOT! 5× ${topSym.emoji} ${topSym.label} — +${coins} COINS! 🎵🎬🎮`;
+      label = `🌟 JACKPOT! 5× ${topSym.emoji} ${topSym.label} — +${coins} COINS! 🎬🎮`;
       cls   = 'ms-result--jackpot';
       winColor = '#ffd166';
       _flash('🌟 JACKPOT!', winColor);
-      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 4);
       if (typeof RewardVault    !== 'undefined') RewardVault.award(5, topSym.label);
     } else if (maxCount === 4) {
       coins = topSym.value * 20;
-      label = `💥 4× ${topSym.emoji} ${topSym.label} — +${coins} COINS! 🎮 Game token!`;
+      label = `💥 4× ${topSym.emoji} ${topSym.label} — +${coins} COINS! 🎮 Game unlocked!`;
       cls   = 'ms-result--bigwin';
       winColor = '#7b5cfa';
-      _flash('💥 GAME TOKEN!', winColor);
-      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 3);
+      _flash('💥 GAME UNLOCKED!', winColor);
       if (typeof RewardVault    !== 'undefined') RewardVault.award(4, topSym.label);
     } else if (maxCount === 3) {
       coins = topSym.value * 5;
-      label = `✨ 3× ${topSym.emoji} ${topSym.label} — +${coins} COINS! 🎬 Video token!`;
+      label = `✨ 3× ${topSym.emoji} ${topSym.label} — +${coins} COINS! 🎬 Video unlocked!`;
       cls   = 'ms-result--win';
-      _flash('🎬 VIDEO TOKEN!', '#00d4ff');
-      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 2);
+      _flash('🎬 VIDEO UNLOCKED!', '#00d4ff');
       if (typeof RewardVault    !== 'undefined') RewardVault.award(3, topSym.label);
     } else if (maxCount === 2) {
       coins = topSym.value;
-      label = `⚡ Pair! 2× ${topSym.emoji} — +${coins} coin 🎵 Music token!`;
+      label = `⚡ Pair! 2× ${topSym.emoji} — +${coins} coin`;
       cls   = 'ms-result--pair';
-      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 1);
       if (typeof RewardVault    !== 'undefined') RewardVault.award(2, topSym.label);
     } else {
       label = `No match — try again! 🍄`;
@@ -321,11 +317,11 @@ const MarioSpin = (() => {
         symbolLabel: topSym.label,
         radioTag:    topSym.radioTag,
         radioLabel:  topSym.radioLabel,
-        matchCount,
+        matchCount:  maxCount,
         coins,
         spinCount,
         topic:       'signal',
-        title:       `Mario Spin #${spinCount} — ${topSym.label}${matchCount >= 2 ? ' ×' + matchCount : ''}`,
+        title:       `Mario Spin #${spinCount} — ${topSym.label}${maxCount >= 2 ? ' ×' + maxCount : ''}`,
       });
     }
 

@@ -2,27 +2,27 @@
  * Reward Vault — Token System for Mario Spin
  *
  * Token tiers earned by Mario Spin match results:
- *   Pair  (2×)   →  🎵  MUSIC token  — plays chiptune or user audio URL
+ *   Pair  (2×)   →  banked silently (no popup)
  *   3-oak (3×)   →  🎬  VIDEO token  — opens video player (archive.org / YouTube / MP4)
  *   4-oak (4×)   →  🎮  GAME  token  — unlocks one NES emulator round
- *   Jackpot (5×) →  🌟  ALL THREE    — music + video + game simultaneously
+ *   Jackpot (5×) →  🌟  BOTH         — video + game simultaneously
+ *
+ * Daily limits: 48 tokens from spins per day.
+ * After 48, enter research terms in the Research panel to earn up to 150/day total.
  *
  * Free content pre-loaded from Archive.org public domain library.
- * Users can paste any audio/video URL into the vault.
+ * Users can paste any video URL into the vault.
  */
 
 const RewardVault = (() => {
 
-  const LS_KEY = 'www_infinity_vault_v1';
+  const LS_KEY      = 'www_infinity_vault_v1';
+  const DAILY_BASE  = 48;   // tokens from spins before research gate kicks in
+  const DAILY_MAX   = 150;  // absolute daily ceiling (API throttle)
 
   // ── Default free content libraries ───────────────────────────────────────
 
-  const DEFAULT_MUSIC = [
-    { label: '🎵 Chiptune — Spin Theme',    type: 'chiptune', tag: 'spin',   author: 'Original — Web Audio' },
-    { label: '🎷 Chiptune — Jazz Win',      type: 'chiptune', tag: 'win2',   author: 'Original — Web Audio' },
-    { label: '🌊 Chiptune — Ambient Loop',  type: 'chiptune', tag: 'loop',   author: 'Original — Web Audio' },
-    { label: '🚀 Chiptune — Launch Fanfare',type: 'chiptune', tag: 'launch', author: 'Original — Web Audio' },
-  ];
+  // No music tokens — pair wins bank coins silently; rewards are video and game only.
 
   // Archive.org public domain embeds — fully free, no copyright
   const DEFAULT_VIDEOS = [
@@ -146,14 +146,25 @@ const RewardVault = (() => {
 
   // ── State ─────────────────────────────────────────────────────────────────
 
+  function _today() {
+    return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  }
+
   function _load() {
     try {
-      return JSON.parse(localStorage.getItem(LS_KEY)) || _empty();
+      const raw = JSON.parse(localStorage.getItem(LS_KEY));
+      if (!raw) return _empty();
+      // Reset daily counters if it's a new day
+      if (raw.dailyDate !== _today()) {
+        raw.dailySpins = 0;
+        raw.dailyDate  = _today();
+      }
+      return { ..._empty(), ...raw };
     } catch (_) { return _empty(); }
   }
 
   function _empty() {
-    return { music: 0, video: 0, game: 0, history: [] };
+    return { video: 0, game: 0, history: [], dailySpins: 0, dailyDate: _today() };
   }
 
   function _save(s) {
@@ -171,33 +182,81 @@ const RewardVault = (() => {
 
   /**
    * Award tokens based on match tier from Mario Spin.
+   * Vault popup only shows for video (3-oak) or game (4-oak+) wins.
+   * Pair (2×) banks a coin silently — no popup.
+   * Daily limit: 48 tokens from spins; after that, research terms required.
    * @param {number} matchCount  – 2 (pair), 3, 4, or 5 (jackpot)
    * @param {string} symbolLabel – e.g. "MUSHROOM"
    */
   function award(matchCount, symbolLabel) {
     const s = _load();
 
+    // Enforce daily cap
+    const dailyCap = s.researchUnlocked ? DAILY_MAX : DAILY_BASE;
+    if (s.dailySpins >= dailyCap) {
+      _showDailyCapMessage(s.researchUnlocked);
+      return;
+    }
+    s.dailySpins = (s.dailySpins || 0) + 1;
+
+    let openTab = null;
+
     if (matchCount >= 5) {
-      // JACKPOT — all three
-      s.music += 2; s.video += 2; s.game += 2;
-      _log('all', `Jackpot! ${symbolLabel} ×5`);
+      // JACKPOT — video + game (no music/chiptune)
+      s.video += 2; s.game += 2;
+      _log('game',  `Jackpot! ${symbolLabel} ×5`);
+      _log('video', `Jackpot! ${symbolLabel} ×5`);
+      openTab = 'video';
     } else if (matchCount === 4) {
       s.game += 2;
       _log('game', `4× ${symbolLabel}`);
+      openTab = 'game';
     } else if (matchCount === 3) {
       s.video += 1;
       _log('video', `3× ${symbolLabel}`);
+      openTab = 'video';
     } else if (matchCount === 2) {
-      s.music += 1;
-      _log('music', `2× ${symbolLabel}`);
+      // Pair — bank silently, no popup
+      _log('pair', `2× ${symbolLabel}`);
     }
 
     _save(s);
     _updateBadges();
-    _openVault();
+
+    // Only open vault popup for video / game wins
+    if (openTab) {
+      _openVault(openTab);
+    }
 
     // Notify ArcadeFlow that a token was earned (so it can flash the vault)
     document.dispatchEvent(new CustomEvent('arcadeTokenEarned', { detail: { matchCount, symbolLabel } }));
+  }
+
+  /**
+   * Called by the Research Panel when the user submits research terms.
+   * Unlocks the higher daily cap (up to DAILY_MAX).
+   */
+  function unlockResearchBonus() {
+    const s = _load();
+    s.researchUnlocked = true;
+    _save(s);
+    _hideDailyCapMessage();
+  }
+
+  function _showDailyCapMessage(alreadyUnlocked) {
+    const el = document.getElementById('vaultDailyMsg');
+    if (!el) return;
+    if (alreadyUnlocked) {
+      el.textContent = `Daily limit of ${DAILY_MAX} tokens reached. Come back tomorrow!`;
+    } else {
+      el.textContent = `Daily spin limit reached (${DAILY_BASE} tokens). Enter research terms below to keep earning today.`;
+    }
+    el.hidden = false;
+  }
+
+  function _hideDailyCapMessage() {
+    const el = document.getElementById('vaultDailyMsg');
+    if (el) el.hidden = true;
   }
 
   function _spend(type) {
@@ -211,16 +270,21 @@ const RewardVault = (() => {
 
   function _updateBadges() {
     const s = _load();
-    _setBadge('vaultMusicCount', s.music);
     _setBadge('vaultVideoCount', s.video);
     _setBadge('vaultGameCount',  s.game);
     // Enable/disable spend buttons
-    ['music','video','game'].forEach((t) => {
+    ['video','game'].forEach((t) => {
       document.querySelectorAll(`.vault-spend-btn[data-token="${t}"]`).forEach((b) => {
         b.disabled = (s[t] || 0) < 1;
         b.textContent = b.dataset.label + ` (${s[t] || 0})`;
       });
     });
+    // Update daily spins counter display
+    const dailyEl = document.getElementById('vaultDailySpins');
+    if (dailyEl) {
+      const cap = s.researchUnlocked ? DAILY_MAX : DAILY_BASE;
+      dailyEl.textContent = `${s.dailySpins || 0} / ${cap} today`;
+    }
   }
 
   function _setBadge(id, val) {
@@ -230,9 +294,10 @@ const RewardVault = (() => {
 
   // ── Vault panel open / tab switch ─────────────────────────────────────────
 
-  function _openVault() {
+  function _openVault(tab) {
     const shell = document.getElementById('vaultShell');
     if (shell) shell.hidden = false;
+    if (tab) _switchTab(tab);
   }
 
   function _switchTab(tab) {
@@ -242,42 +307,6 @@ const RewardVault = (() => {
     document.querySelectorAll('.vault-pane').forEach((p) => {
       p.hidden = p.dataset.pane !== tab;
     });
-  }
-
-  // ── MUSIC player ──────────────────────────────────────────────────────────
-
-  let _musicAudio = null;
-
-  function _playMusicToken(item) {
-    if (!_spend('music')) return;
-
-    if (item.type === 'chiptune') {
-      if (typeof ChiptuneEngine !== 'undefined') {
-        if (item.tag === 'loop') {
-          ChiptuneEngine.startLoop();
-        } else if (item.tag === 'win2') {
-          ChiptuneEngine.play('win', 2);
-        } else if (item.tag === 'launch') {
-          ChiptuneEngine.play('launch');
-        } else {
-          ChiptuneEngine.play('spin');
-        }
-      }
-      _showMusicStatus(`▶ ${item.label} — playing`);
-      return;
-    }
-
-    // URL-based audio
-    if (_musicAudio) { _musicAudio.pause(); _musicAudio = null; }
-    _musicAudio = new Audio(item.url);
-    _musicAudio.volume = 0.5;
-    _musicAudio.play().catch((e) => _showMusicStatus(`⚠ ${e.message}`));
-    _showMusicStatus(`▶ ${item.label}`);
-  }
-
-  function _showMusicStatus(msg) {
-    const el = document.getElementById('vaultMusicStatus');
-    if (el) el.textContent = msg;
   }
 
   // ── VIDEO player ──────────────────────────────────────────────────────────
@@ -340,8 +369,7 @@ const RewardVault = (() => {
       : RAW + item.file;
 
     if (url) GameEmulator.launchROM(url);
-    _openVault();
-    _switchTab('game');
+    _openVault('game');
   }
 
   // ── Render vault panel ────────────────────────────────────────────────────
@@ -358,15 +386,11 @@ const RewardVault = (() => {
           <div>
             <h2 class="vault-title">
               <span aria-hidden="true">🏆</span>
-              Token Vault
+              Rewards
             </h2>
-            <p class="vault-sub">Pair=🎵 · 3-oak=🎬 · 4-oak=🎮 · Jackpot=🌟 All</p>
+            <p class="vault-sub">3-of-a-kind=🎬 Video · 4-of-a-kind=🎮 Game · Jackpot=🌟 Both</p>
           </div>
           <div class="vault-counts">
-            <div class="vault-count-item" title="Music tokens">
-              <span class="vault-count-icon">🎵</span>
-              <span class="vault-count-val" id="vaultMusicCount">0</span>
-            </div>
             <div class="vault-count-item" title="Video tokens">
               <span class="vault-count-icon">🎬</span>
               <span class="vault-count-val" id="vaultVideoCount">0</span>
@@ -375,46 +399,28 @@ const RewardVault = (() => {
               <span class="vault-count-icon">🎮</span>
               <span class="vault-count-val" id="vaultGameCount">0</span>
             </div>
+            <div class="vault-count-item" title="Tokens earned today">
+              <span class="vault-count-icon">🪙</span>
+              <span class="vault-count-val" id="vaultDailySpins">0 / ${DAILY_BASE}</span>
+            </div>
           </div>
         </div>
+
+        <!-- Daily cap message (hidden until cap is reached) -->
+        <div class="vault-daily-msg" id="vaultDailyMsg" hidden></div>
+
+        <!-- Close button -->
+        <button class="vault-close-btn btn-secondary" id="vaultCloseBtn" aria-label="Close rewards">✕ Close</button>
 
         <!-- Tabs -->
         <div class="vault-tabs" role="tablist">
-          <button class="vault-tab-btn active" data-tab="music"  role="tab">🎵 Music</button>
-          <button class="vault-tab-btn"        data-tab="video"  role="tab">🎬 Video</button>
-          <button class="vault-tab-btn"        data-tab="game"   role="tab">🎮 Games</button>
-        </div>
-
-        <!-- ── MUSIC PANE ── -->
-        <div class="vault-pane" data-pane="music">
-          <p class="vault-pane-hint">Spend a 🎵 token to play. Earn by getting a <strong>Pair</strong> in Mario Spin.</p>
-          <div class="vault-status" id="vaultMusicStatus">No music playing.</div>
-          <div class="vault-grid">
-            ${DEFAULT_MUSIC.map((m, i) => `
-              <div class="vault-item">
-                <div class="vault-item-label">${m.label}</div>
-                <div class="vault-item-author">${m.author}</div>
-                <button class="vault-spend-btn btn-primary"
-                        data-token="music"
-                        data-label="▶ Play"
-                        data-idx="${i}"
-                        disabled>▶ Play (0)</button>
-              </div>
-            `).join('')}
-          </div>
-          <div class="vault-custom-row">
-            <input type="url" id="vaultCustomAudioUrl" class="vault-url-input"
-                   placeholder="Or paste any audio URL (.mp3, .ogg, SoundCloud…)" />
-            <button class="vault-spend-btn btn-primary"
-                    data-token="music" data-label="▶ Play URL" data-custom="audio" disabled>
-              ▶ Play URL (0)
-            </button>
-          </div>
+          <button class="vault-tab-btn active" data-tab="video" role="tab">🎬 Video</button>
+          <button class="vault-tab-btn"        data-tab="game"  role="tab">🎮 Games</button>
         </div>
 
         <!-- ── VIDEO PANE ── -->
-        <div class="vault-pane" data-pane="video" hidden>
-          <p class="vault-pane-hint">Spend a 🎬 token to watch. Earn by getting <strong>3-of-a-kind</strong>.</p>
+        <div class="vault-pane" data-pane="video">
+          <p class="vault-pane-hint">Spend a 🎬 token to watch. Earn by getting <strong>3-of-a-kind</strong> in Mario Spin.</p>
           <div class="vault-status" id="vaultVideoStatus">No video playing.</div>
           <div class="vault-player-wrap">
             <iframe id="vaultVideoFrame" class="vault-iframe" src="" hidden
@@ -448,7 +454,7 @@ const RewardVault = (() => {
 
         <!-- ── GAME PANE ── -->
         <div class="vault-pane" data-pane="game" hidden>
-          <p class="vault-pane-hint">Spend a 🎮 token to play one round. Earn by getting <strong>4-of-a-kind</strong>.</p>
+          <p class="vault-pane-hint">Spend a 🎮 token to play one round. Earn by getting <strong>4-of-a-kind</strong> in Mario Spin.</p>
           <div id="gameEmulatorMount"></div>
           <div class="vault-grid vault-grid--games">
             ${DEFAULT_GAMES.filter((g) => !g.custom).map((g, i) => `
@@ -481,22 +487,18 @@ const RewardVault = (() => {
       GameEmulator.render('gameEmulatorMount');
     }
 
+    // Wire close button
+    const closeBtn = document.getElementById('vaultCloseBtn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        const shell = document.getElementById('vaultShell');
+        if (shell) shell.hidden = true;
+      });
+    }
+
     // Wire tabs
     mount.querySelectorAll('.vault-tab-btn').forEach((b) => {
       b.addEventListener('click', () => _switchTab(b.dataset.tab));
-    });
-
-    // Wire music buttons
-    mount.querySelectorAll('.vault-spend-btn[data-token="music"]').forEach((b) => {
-      b.addEventListener('click', () => {
-        if (b.dataset.custom === 'audio') {
-          const url = document.getElementById('vaultCustomAudioUrl')?.value?.trim();
-          if (url) _playMusicToken({ label: 'Custom Audio', type: 'url', url });
-        } else {
-          const idx = parseInt(b.dataset.idx, 10);
-          if (!isNaN(idx)) _playMusicToken(DEFAULT_MUSIC[idx]);
-        }
-      });
     });
 
     // Wire video buttons
@@ -530,9 +532,9 @@ const RewardVault = (() => {
   return {
     render,
     award,
+    unlockResearchBonus,
     DEFAULT_GAMES,
     DEFAULT_VIDEOS,
-    DEFAULT_MUSIC,
     RAW,
   };
 })();

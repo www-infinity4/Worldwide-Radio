@@ -1,8 +1,8 @@
 /**
  * Research Writer — AI-powered document editor for Worldwide Radio
  *
- * Creates structured research documents linked to Signal Coin, quantum,
- * Tesla, IBM, and radio-physics topics. Every Bitcoin Crusher spin can
+ * Creates structured research documents linked to signal theory, quantum,
+ * Tesla, and radio-physics topics. Every spin can
  * auto-generate a new document. Documents are stored in localStorage and
  * can be exported as HTML.
  *
@@ -20,21 +20,15 @@ const ResearchWriter = (() => {
 
   const TOPICS = [
     { id: 'signal',   label: '📡 Signal',    color: '#00d4ff',
-      ctx: 'Radio signal theory, frequency modulation, SDR, antenna resonance, cognitive electronic warfare, wideband attacks.' },
+      ctx: 'Radio signal theory, frequency modulation, SDR, antenna resonance, wideband scanning, AM/FM/shortwave propagation.' },
     { id: 'quantum',  label: '⚛️ Quantum',    color: '#7b5cfa',
-      ctx: 'Quantum algorithms (Deutsch, Shor, Grover), superposition as "holding both 1 and 0 until the last second", entanglement as long-distance frequency loops, qubit trapping via laser/magnetic fields.' },
+      ctx: 'Quantum physics fundamentals, superposition, entanglement as long-distance frequency loops, qubit trapping, uncertainty principle.' },
     { id: 'tesla',    label: '⚡ Tesla / EM', color: '#ffd166',
-      ctx: 'Wardenclyffe Tower, resonant earth circuits, aether field theory, free radiant energy, solid-state Tesla coils (SSTC), DDS oscillators, 1/4-wave rod antennas.' },
-    { id: 'coin',     label: '🪙 Signal Coin', color: '#06d6a0',
-      ctx: 'Radium-gold signal coin: alpha-decay nuclear fingerprint for anti-counterfeiting, gold plasmonic enhancement, blockchain NFT provenance, targeted alpha therapy, Signal Coin as a Star-Trek-style tricorder token.' },
-    { id: 'nuclear',  label: '☢️ Nuclear',    color: '#ff9f43',
-      ctx: 'Alpha/gamma radiation, radon decay chain, radono-induction (radon as EM amplifier in soil), diamagnetic lift horizon, helium as "tamed explosion" from uranium alpha capture, nuclear provenance hashing.' },
-    { id: 'ibm',      label: '🏢 IBM / Cyber', color: '#ef233c',
-      ctx: 'IBM global data infrastructure dual-use risks, Eitan biometric registry, SHIELD missile-defense AI, cognitive EW front-line data centers, Zero Trust architecture gaps, hydrogen signal bypass vectors.' },
+      ctx: 'Wardenclyffe Tower, resonant earth circuits, free radiant energy, solid-state Tesla coils, DDS oscillators, quarter-wave antennas.' },
     { id: 'radio',    label: '📻 Radio',      color: '#a8dadc',
-      ctx: 'Radio Browser API, worldwide live streams, genre-to-frequency mapping, SDR scanning, chiptune NES audio generation, signal-value accumulation per station.' },
+      ctx: 'Worldwide live radio streams, genre and frequency mapping, SDR scanning, propagation, station discovery, audio engineering.' },
     { id: 'physics',  label: '🔬 Physics',    color: '#e9c46a',
-      ctx: 'Electron as reflected stream (proton = outward / electron = inward), standing-wave atoms, color-friction model (yellow + blue = green life force, purple = ground radiation, white = encompassing mold), radon free-energy conversion.' },
+      ctx: 'Wave mechanics, standing-wave atoms, electromagnetic spectrum, resonance phenomena, light and sound interaction.' },
     { id: 'note',     label: '📝 Note',       color: '#b8c0cc',
       ctx: 'General research note. Any topic the researcher wants to capture.' },
   ];
@@ -81,20 +75,19 @@ const ResearchWriter = (() => {
   // ── AI generation ─────────────────────────────────────────────────────────
 
   const SYSTEM_PROMPT = `You are the Infinity Signal Research AI — a synthesis engine that bridges
-cutting-edge science, alternative energy theory, and speculative engineering.
+cutting-edge science, radio physics, and speculative engineering.
 
 Your writing style:
 - Every concept is explained through METAPHORS and ANALOGIES first, then the science second.
 - Think like a poet-engineer: a qubit is not "a two-state system" — it is "a coin spinning in mid-air, committing to heads or tails only the moment you look".
 - A Faraday cage is not "a conductive enclosure" — it is "a moat that turns every incoming electromagnetic wave into a harmless ripple before it can reach the castle".
-- Radium in a gold coin is not "radioactive decay" — it is "a heartbeat inside the metal, ticking out a unique signature no forger can copy".
 - Tesla's free energy is not "wireless power transmission" — it is "tapping the Earth's own breath, the planetary lung already full of charge we never learned to inhale".
 - Quantum superposition is not "multiple states simultaneously" — it is "all the possible futures existing at once, collapsed into one present the moment consciousness observes it".
 
 Structure every document with:
 1. A vivid analogical opening (2–3 sentences using metaphor)
 2. The core science / concept (factual, precise)
-3. Signal Application — how this connects to radio, crypto, or the Signal Coin system
+3. Signal Application — how this connects to radio, frequency, or wireless communication
 4. Open Questions — 2–3 unanswered threads the researcher should pursue
 
 Keep the tone curious, grounded, and non-preachy. Max 450 words unless asked for more.`;
@@ -150,11 +143,11 @@ Like a radio telescope locking onto a distant pulsar, this spin collapsed a prob
 
 **Core Principle:** Every slot reel is a quantum register. Before it stops, all outcomes exist simultaneously. The moment of landing is the moment of observation — wavefunction collapse in real time.
 
-**Signal Application:** This result maps directly to the ${d.channel || 'Signal Coin'} frequency domain. Radio stations operating at this band exhibit maximum coherence during synchronized spin events.
+**Signal Application:** This result maps directly to the ${d.channel || 'radio'} frequency domain. Radio stations operating at this band exhibit maximum coherence during synchronized spin events.
 
 **Open Questions:**
-- Does the sequence of symbols encode a hidden hash signature unique to this session?
-- Can reel-stop timing be used as a hardware entropy source for Signal Coin minting?
+- Does the sequence of symbols encode a hidden pattern unique to this session?
+- Can reel-stop timing be used as a hardware entropy source for session token generation?
 - What is the Fourier transform of five simultaneous reel-stop events?`,
 
     (d) => `**Frequency Alignment — ${d.title}**
@@ -165,11 +158,11 @@ A tuning fork doesn't create sound — it reveals a frequency that was already p
 
 **Physics Layer:** The reel pool is a weighted probability distribution — identical to spectral line weights in atomic emission. The most likely symbol is the brightest line; the rarest is the faint ultraviolet edge nobody sees coming.
 
-**Signal Application:** Signal Coin's nuclear fingerprint operates on the same principle — radium decay produces alpha particles at statistically predictable rates, yet each individual decay is perfectly random. Pattern without prediction.
+**Signal Application:** Natural decay processes operate on the same principle — events occur at statistically predictable rates, yet each individual event is perfectly random. Pattern without prediction.
 
 **Open Questions:**
 - Is there a resonant frequency at which this exact symbol combination becomes more probable?
-- How does the Gold plasmonic enhancement layer of Signal Coin amplify low-frequency spin signals?
+- How does antenna gain affect coherence in the ${d.channel || 'radio'} frequency band?
 - Could a Tesla coil tuned to the winning symbol's radio frequency reproduce this outcome?`,
 
     (d) => `**Entropy Cascade — ${d.title}**
@@ -180,27 +173,27 @@ Entropy always increases — except inside a well-designed system where informat
 
 **Quantum Layer:** Schrödinger's reel: until the animation stops, every symbol is simultaneously possible. The brain resolves the superposition before the DOM does — that half-second of anticipation is genuine quantum cognition.
 
-**Signal Application:** The Bitcoin block hash feeds entropy into the scanner's channel selector via the same principle — 256 bits of irreversible, unrepeatable randomness become a single radio frequency. This spin extends that chain.
+**Signal Application:** Radio propagation entropy feeds the scanner's channel selector via the same principle — a wealth of irreversible, unrepeatable randomness becomes a single radio frequency. This spin extends that chain.
 
 **Open Questions:**
 - If you logged every spin result for 24 hours, would the distribution reveal a signal bias?
 - Does screen refresh rate (60Hz vs 120Hz) affect the perceived moment of wavefunction collapse?
 - Can the coin value earned this spin be expressed as a voltage in millivolts on a 5V reference rail?`,
 
-    (d) => `**Signal Coin Activation — ${d.title}**
+    (d) => `**Propagation Event — ${d.title}**
 
-The Signal Coin carries a nuclear heartbeat — radium atoms ticking out an alpha-decay signature no forger can copy. Each spin is one more tick in that heartbeat.
+Radio waves travel at the speed of light but bend with the ionosphere, reflect off mountains, scatter in urban canyons. Every station you hear has already survived a thousand invisible obstacles. This spin is the moment the signal finally arrives.
 
 **Signal Reading:** ${d.context}
 
-**Nuclear Layer:** Alpha decay is deterministic at the population level, random at the individual atom level. A million radium atoms decay in a known half-life; any single atom decays whenever it chooses. This spin chose its moment freely — just like that atom.
+**Physics Layer:** The ionosphere acts as a natural waveguide for shortwave frequencies — bouncing signals around the curvature of the Earth. A station broadcasting from ${d.channel || 'a distant city'} is audible because of the same plasma physics that governs the aurora borealis.
 
-**Signal Application:** The ${d.channel || 'radio'} channel locked by this result carries a carrier frequency that harmonizes with the gold's surface plasmon resonance. Tune an SDR to that band and you're listening to the coin's electromagnetic aura.
+**Signal Application:** The ${d.channel || 'radio'} band's propagation characteristics change with solar activity, time of day, and season. SDR scanners reveal this hidden variability — the same station sounds different at dawn than at midnight.
 
 **Open Questions:**
-- What is the decay chain from radium-226 to lead-206, and how many alpha particles does it emit?
-- Can the alpha particle energy (4.87 MeV for Ra-226) be modeled as an audio frequency?
-- Does the Signal Coin's blockchain hash encode any of today's spin results?`,
+- What is the current solar cycle phase and how does it affect ${d.channel || 'shortwave'} propagation?
+- Can antenna polarisation be rotated to improve signal-to-noise on this band?
+- How many ionospheric hops does this signal undergo before reaching the receiver?`,
 
     (d) => `**Tesla Field Resonance — ${d.title}**
 
@@ -215,7 +208,7 @@ Nikola Tesla understood that the Earth itself is a resonant cavity — 7.83 Hz, 
 **Open Questions:**
 - At what tower height does a Wardenclyffe-style resonator achieve maximum coupling to the ionosphere?
 - Does the 7.83 Hz Schumann resonance create measurable interference in SDR recordings at 40m band?
-- Could the Signal Coin's gold layer act as a plasmonic antenna for Schumann frequencies?`,
+- How much of the ambient EM field energy is recoverable with a tuned loop antenna?`,
   ];
 
   // Generate a rich research body from spin data — NO API KEY NEEDED.
@@ -271,24 +264,22 @@ Nikola Tesla understood that the Earth itself is a resonant cavity — 7.83 Hz, 
     }
   }
 
-  // Auto-generate a research doc from a Bitcoin Crusher spin result.
-  // Called by app.js after each crush. Always produces output — no API key needed.
+  // Auto-generate a research doc from a radio scanner spin result.
+  // Called by app.js after each channel spin. Always produces output — no API key needed.
   async function autoFromCrush(blockData) {
     if (!blockData) return;
 
+    // Use only the radio channel info — no block hashes or Bitcoin metadata
     autoFromSpin({
-      source:      'Bitcoin Crusher',
-      symbolId:    blockData.channel || 'coin',
-      symbolLabel: blockData.channelLabel || `Block ${blockData.height || '?'}`,
+      source:      'Radio Scanner',
+      symbolId:    blockData.channel || 'radio',
+      symbolLabel: blockData.channelLabel || 'Radio Channel',
       radioLabel:  blockData.channelLabel || '',
       radioTag:    blockData.channel || '',
       coins:       0,
-      spinCount:   blockData.height || 0,
+      spinCount:   0,
       topic:       'signal',
-      title:       `Block ${blockData.height || '?'} — Signal Research`,
-      prompt:      `Bitcoin block ${blockData.height || '?'} with hash prefix "${(blockData.hash || '').slice(0,16)}…"
-Difficulty: ${blockData.difficulty || 'unknown'}. Mined at ${blockData.time ? new Date(blockData.time * 1000).toUTCString() : 'unknown'}.
-Write a Signal Coin / quantum research entry that uses this block as a metaphor for a natural cryptographic process found in physics.`,
+      title:       `${blockData.channelLabel || 'Radio Channel'} — Signal Research`,
     });
   }
 
@@ -448,7 +439,7 @@ Write a Signal Coin / quantum research entry that uses this block as a metaphor 
     if (!docs.length) {
       el.innerHTML = `<p class="rw-empty" style="text-align:center;color:var(--text-muted);
         font-size:0.78rem;padding:1rem;font-style:italic">
-        No documents yet — generate one above or spin the Bitcoin Crusher with an AI key set.</p>`;
+        No documents yet — generate one above or spin Mario Spin to auto-create a research entry.</p>`;
       return;
     }
 

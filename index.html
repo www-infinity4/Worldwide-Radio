@@ -108,6 +108,21 @@
         <button class="printout-close btn-secondary" id="printoutClose" aria-label="Dismiss">✕</button>
       </div>
       <div class="printout-body" id="spinPrintoutBody"></div>
+
+      <!-- Research Terms — enter your own terms to extend daily token quota -->
+      <div class="research-terms-box" id="researchTermsBox">
+        <p class="research-terms-label">
+          📝 Add your own research terms to keep earning tokens after the daily limit
+          <span class="research-terms-hint">(enter any topic or keyword — 2+ words)</span>
+        </p>
+        <div class="research-terms-row">
+          <input type="text" id="researchTermsInput" class="research-terms-input"
+                 placeholder="e.g. shortwave propagation, Tesla resonance, radio astronomy…"
+                 autocomplete="off" maxlength="200" />
+          <button class="btn-primary" id="researchTermsBtn">Save Terms</button>
+        </div>
+        <p class="research-terms-status" id="researchTermsStatus" hidden></p>
+      </div>
     </div>
   </section>
 
@@ -248,7 +263,7 @@
   </section>
 
   <!-- ═══════════════════════ TOKEN VAULT ═══════════════════════ -->
-  <section class="app-shell vault-shell" id="vaultShell" aria-label="Token Vault">
+  <section class="app-shell vault-shell" id="vaultShell" hidden aria-label="Rewards">
     <div id="vaultMount"></div>
     <div class="warp-shell glass-card" id="warpShell">
       <div class="warp-header">
@@ -413,6 +428,8 @@
   <script src="js/signalValue.js"></script>
   <script src="js/levelSystem.js"></script>
   <script src="js/signalDictionary.js"></script>
+  <script src="js/researchLogger.js"></script>
+  <script src="js/researchPanel.js"></script>
   <script src="js/researchWriter.js"></script>
   <script src="js/pianoMint.js"></script>
   <script src="js/arcadeFlow.js"></script>
@@ -528,6 +545,39 @@
           document.getElementById("spinPrintout").hidden = true;
         });
       }
+
+      // Research terms — unlocks extra daily token quota
+      (function () {
+        const termsBtn   = document.getElementById("researchTermsBtn");
+        const termsInput = document.getElementById("researchTermsInput");
+        const termsStatus = document.getElementById("researchTermsStatus");
+
+        function submitTerms() {
+          const terms = termsInput ? termsInput.value.trim() : "";
+          if (!terms || terms.split(/\s+/).length < 2) {
+            if (termsInput) {
+              termsInput.style.borderColor = "var(--danger, #ef233c)";
+              setTimeout(() => { termsInput.style.borderColor = ""; }, 1500);
+              termsInput.focus();
+            }
+            return;
+          }
+          if (typeof RewardVault !== "undefined") {
+            RewardVault.unlockResearchBonus();
+          }
+          if (termsInput) termsInput.value = "";
+          if (termsStatus) {
+            termsStatus.textContent = "✓ Research terms saved — extended token quota unlocked!";
+            termsStatus.hidden = false;
+            setTimeout(() => { termsStatus.hidden = true; }, 4000);
+          }
+        }
+
+        if (termsBtn)   termsBtn.addEventListener("click", submitTerms);
+        if (termsInput) termsInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") { e.preventDefault(); submitTerms(); }
+        });
+      })();
 
       UserProfile.renderNavAvatar();
     })();

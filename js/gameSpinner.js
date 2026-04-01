@@ -214,7 +214,6 @@ const GameSpinner = (() => {
     _showToast(`🔗 COMBO CHAIN! Mario + Game Spin → ×2 signal value`, '#ffd166');
     if (typeof SignalValue  !== 'undefined') SignalValue.add('combo', 20);
     if (typeof LevelSystem  !== 'undefined') LevelSystem.awardXP('jackpot');
-    if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 4);
   }
 
   let spinning = false;
@@ -445,10 +444,6 @@ const GameSpinner = (() => {
         if (reel && ids[i] === topId) reel.classList.add('gs-reel--match');
       });
 
-      // Chiptune genre lock — play a matching audio theme
-      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 3);
-      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('radio', topGame.radioTag);
-
       // Tune radio to match the game's genre
       if (topGame.radioTag && typeof window._onMarioSlotWin === 'function') {
         window._onMarioSlotWin(
@@ -478,7 +473,6 @@ const GameSpinner = (() => {
       _addToken();
 
       if (typeof LevelSystem    !== 'undefined') LevelSystem.awardXP('pair');
-      if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('win', 1);
       if (typeof SignalValue    !== 'undefined') SignalValue.add('gameSpin', 5);
       window._lastGameSpinWin = true;
 
@@ -505,7 +499,7 @@ const GameSpinner = (() => {
         gameLabel:   topGame.label,
         radioTag:    topGame.radioTag,
         radioLabel:  topGame.label,
-        matchCount,
+        matchCount:  maxCount,
         coins:       0,
         spinCount,
         topic:       'radio',
@@ -541,7 +535,6 @@ const GameSpinner = (() => {
     GameEmulator.launchROM(game.rom);
 
     _showToast(`▶ Loading ${game.label} — 90-second demo starts now!`, game.color);
-    if (typeof ChiptuneEngine !== 'undefined') ChiptuneEngine.play('launch');
 
     // Synapse memory
     if (typeof Synapse !== 'undefined') {
